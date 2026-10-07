@@ -10,6 +10,7 @@ import FlowSteps from "../components/FlowSteps";
 import { Reveal } from "../components/Reveal";
 import { SOLUTIONS } from "../data/site";
 import { NavPagesStack } from "../components/NavPagesStack/NavPagesStack";
+import EnterpriseTransformation from "../components/EnterpriseTransformation";
 
 const HERO_BG_NODES = [
     {
@@ -213,6 +214,9 @@ const Home = () => {
 
             {/* ALL MAIN NAV PAGES STACK SECTION */}
             <NavPagesStack />
+
+            {/* AI + DIGITAL BUSINESS TRANSFORMATION SECTION */}
+            <EnterpriseTransformation />
 
             {/* <EditorialMarquee /> */}
 

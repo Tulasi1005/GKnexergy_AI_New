@@ -92,26 +92,23 @@ const Navbar = ({ theme, onToggleTheme }) => {
                         : "0 4px 20px -2px rgba(15, 45, 107, 0.07), 0 2px 6px -1px rgba(0, 0, 0, 0.04)",
             }}
         >
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-2.5 xs:px-4 sm:px-6 lg:px-8">
                 
                 {/* Full-Length Header Row */}
-                <div className="flex h-16 sm:h-20 items-center justify-between gap-2.5 sm:gap-4">
+                <div className="flex h-14 sm:h-20 items-center justify-between gap-1.5 xs:gap-2.5 sm:gap-4">
                     {/* LEFT – Brand Logo & Tag */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 xs:gap-3 min-w-0">
                         <Link
                             to="/"
                             data-testid="nav-logo"
-                            className="flex shrink-0 items-center gap-2.5 transition-transform duration-200 hover:scale-[1.03]"
+                            className="flex shrink-0 items-center transition-transform duration-200 hover:scale-[1.03]"
                         >
+                            {/* Brand Logo – dynamic for light and dark mode */}
                             <img
-                                src="/images/gklogo.png"
+                                src={theme === "dark" ? "/images/gklogo-dark.png" : "/images/gklogo.png"}
                                 alt="GK Nexergy Logo"
-                                className="navbar-logo"
+                                className="navbar-logo h-6 xs:h-7 sm:h-9 w-auto max-w-[105px] xs:max-w-[130px] sm:max-w-none object-contain"
                                 style={{
-                                    height: "38px",
-                                    maxHeight: "42px",
-                                    width: "auto",
-                                    objectFit: "contain",
                                     border: "none",
                                 }}
                             />
@@ -127,7 +124,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                     </div>
 
                     {/* RIGHT – Actions Island */}
-                    <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
+                    <div className="flex shrink-0 items-center gap-1.5 xs:gap-2 sm:gap-2.5">
                         
                         {/* ========================================================= */}
                         {/* 1. LANGUAGE TRANSLATOR BUTTON & INTERACTIVE DEMO STUDIO   */}
@@ -141,7 +138,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                 onClick={() => setLangModalOpen((v) => !v)}
                                 aria-label="Translate Entire Website"
                                 title="Select Website Language"
-                                className={`flex h-9 items-center gap-1.5 px-3 sm:px-3.5 rounded-full transition-all cursor-pointer font-display text-xs font-bold shadow-sm ${
+                                className={`flex h-8 xs:h-9 items-center gap-1 xs:gap-1.5 px-2 xs:px-3 sm:px-3.5 rounded-full transition-all cursor-pointer font-display text-[11px] xs:text-xs font-bold shadow-sm ${
                                     langModalOpen
                                         ? "bg-brand text-white shadow-brand/30 scale-[1.02]"
                                         : theme === "dark"
@@ -158,12 +155,12 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                             : "rgba(241, 245, 249, 0.95)",
                                 }}
                             >
-                                <Languages className={`h-3.5 w-3.5 ${langModalOpen ? "text-white" : "text-brand dark:text-blue-400"}`} />
-                                <span className="uppercase tracking-wider text-[11px] font-extrabold flex items-center gap-1">
-                                    <span>{currentLangObj.flag}</span>
+                                <Languages className={`h-3 xs:h-3.5 w-3 xs:w-3.5 ${langModalOpen ? "text-white" : "text-brand dark:text-blue-400"}`} />
+                                <span className="uppercase tracking-wider text-[10px] xs:text-[11px] font-extrabold flex items-center gap-1">
+                                    <span className="hidden xs:inline">{currentLangObj.flag}</span>
                                     <span>{selectedLang.toUpperCase()}</span>
                                 </span>
-                                <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${langModalOpen ? "rotate-180 text-white" : "text-slate-400 dark:text-slate-500"}`} />
+                                <ChevronDown className={`h-2.5 xs:h-3 w-2.5 xs:w-3 transition-transform duration-200 ${langModalOpen ? "rotate-180 text-white" : "text-slate-400 dark:text-slate-500"}`} />
                             </button>
 
                             {/* Dropdown Menu - Clean attached dropdown */}
@@ -174,11 +171,10 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                         transition={{ duration: 0.18, ease: "easeOut" }}
-                                        className="absolute right-0 top-full mt-3 z-[9999] rounded-2xl border p-4 shadow-2xl"
+                                        className="fixed xs:absolute right-2.5 xs:right-0 top-16 xs:top-full mt-2 z-[9999] rounded-2xl border p-3.5 xs:p-4 shadow-2xl"
                                         style={{
-                                            width: "330px",
-                                            minWidth: "310px",
-                                            maxWidth: "calc(100vw - 28px)",
+                                            width: "min(320px, calc(100vw - 20px))",
+                                            maxWidth: "calc(100vw - 20px)",
                                             backgroundColor: theme === "dark" ? "#0c1e3d" : "#ffffff",
                                             borderColor: theme === "dark" ? "rgba(56, 189, 248, 0.3)" : "#e2e8f0",
                                             boxShadow:
@@ -190,7 +186,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                     >
                                         {/* Upward Triangle Arrow */}
                                         <div
-                                            className="absolute -top-2 right-6 h-3.5 w-3.5 rotate-45 border-l border-t pointer-events-none"
+                                            className="hidden xs:block absolute -top-2 right-6 h-3.5 w-3.5 rotate-45 border-l border-t pointer-events-none"
                                             style={{
                                                 backgroundColor: theme === "dark" ? "#0c1e3d" : "#ffffff",
                                                 borderColor: theme === "dark" ? "rgba(56, 189, 248, 0.3)" : "#e2e8f0",
@@ -332,7 +328,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                             data-testid="theme-toggle"
                             onClick={onToggleTheme}
                             aria-label="Toggle light and dark theme"
-                            className="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:scale-105 cursor-pointer shadow-sm"
+                            className="flex h-8 w-8 xs:h-9 xs:w-9 items-center justify-center rounded-full transition-all hover:scale-105 cursor-pointer shadow-sm shrink-0"
                             style={{
                                 border: "none",
                                 backgroundColor:
@@ -343,9 +339,9 @@ const Navbar = ({ theme, onToggleTheme }) => {
                             }}
                         >
                             {theme === "dark" ? (
-                                <Sun className="h-4 w-4 text-amber-400" />
+                                <Sun className="h-3.5 xs:h-4 w-3.5 xs:w-4 text-amber-400" />
                             ) : (
-                                <Moon className="h-4 w-4 text-slate-700" />
+                                <Moon className="h-3.5 xs:h-4 w-3.5 xs:w-4 text-slate-700" />
                             )}
                         </button>
 
@@ -389,7 +385,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                             data-testid="main-menu-toggle"
                             onClick={() => setMobileOpen((v) => !v)}
                             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
-                            className={`flex h-9 sm:h-9.5 items-center gap-2 px-3.5 sm:px-4 rounded-full transition-all cursor-pointer font-display text-xs font-extrabold uppercase tracking-wider shadow-sm ${
+                            className={`flex h-8 xs:h-9 sm:h-9.5 items-center gap-1.5 xs:gap-2 px-2.5 xs:px-3.5 sm:px-4 rounded-full transition-all cursor-pointer font-display text-[11px] xs:text-xs font-extrabold uppercase tracking-wider shadow-sm shrink-0 ${
                                 mobileOpen
                                     ? "bg-brand text-white shadow-lg shadow-brand/35 scale-[1.02]"
                                     : theme === "dark"
@@ -406,7 +402,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                         : "rgba(241, 245, 249, 0.95)",
                             }}
                         >
-                            <span>{mobileOpen ? "Close" : "Menu"}</span>
+                            <span className="hidden xs:inline">{mobileOpen ? "Close" : "Menu"}</span>
                             {mobileOpen ? (
                                 <X className="h-3.5 w-3.5" />
                             ) : (
@@ -429,11 +425,11 @@ const Navbar = ({ theme, onToggleTheme }) => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -12, scale: 0.98 }}
                         transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-                        className="pointer-events-auto mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 mt-2 max-h-[calc(100vh-80px)] overflow-y-auto"
+                        className="pointer-events-auto mx-auto max-w-7xl px-2 xs:px-3 sm:px-6 lg:px-8 mt-2 max-h-[calc(100vh-70px)] overflow-y-auto z-[99999]"
                         data-testid="flyout-menu"
                     >
                         <div
-                            className="rounded-3xl border p-5 sm:p-8 shadow-2xl backdrop-blur-2xl"
+                            className="rounded-2xl sm:rounded-3xl border p-3.5 xs:p-5 sm:p-8 shadow-2xl backdrop-blur-2xl"
                             style={{
                                 background:
                                     theme === "dark"

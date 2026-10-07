@@ -101,8 +101,25 @@
   width: auto;
   max-height: 48px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   transition: transform 0.25s ease;
+}
+
+.footer-logo-img.light-only {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+.footer-logo-img.dark-only {
+  display: none;
+  filter: drop-shadow(0 2px 10px rgba(56, 189, 248, 0.25));
+}
+
+.dark .footer-logo-img.light-only {
+  display: none !important;
+}
+
+.dark .footer-logo-img.dark-only {
+  display: block !important;
 }
 
 @media (min-width: 640px) {
@@ -114,10 +131,6 @@
 
 .footer-logo-link:hover .footer-logo-img {
   transform: scale(1.02);
-}
-
-.dark .footer-logo-img {
-  filter: drop-shadow(0 2px 10px rgba(56, 189, 248, 0.35));
 }
 
 /* â”€â”€ Elegant Straight Tagline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */

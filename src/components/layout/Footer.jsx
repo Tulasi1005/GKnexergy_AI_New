@@ -1,20 +1,38 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Github } from "lucide-react";
 import "./Footer.css";
 import { Users, Briefcase, Globe } from "lucide-react";
-const Footer = () => (
-  <footer className="site-footer" data-testid="main-footer">
-    <div className="footer-container">
-      <div className="footer-grid">
-        {/* 1. Brand Section */}
-        <div className="footer-brand-col">
-          <Link to="/home" className="footer-logo-link" data-testid="footer-logo">
-            <img
-              src="/images/gklogo.png"
-              alt="GK Nexergy Logo"
-              className="footer-logo-img"
-            />
-          </Link>
+
+const Footer = ({ theme }) => {
+  const [isDark, setIsDark] = useState(() => theme === "dark" || document.documentElement.classList.contains("dark"));
+
+  useEffect(() => {
+    if (theme) {
+      setIsDark(theme === "dark");
+    } else {
+      const observer = new MutationObserver(() => {
+        setIsDark(document.documentElement.classList.contains("dark"));
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+      return () => observer.disconnect();
+    }
+  }, [theme]);
+
+  return (
+    <footer className="site-footer" data-testid="main-footer">
+      <div className="footer-container">
+        <div className="footer-grid">
+          {/* 1. Brand Section */}
+          <div className="footer-brand-col">
+            <Link to="/home" className="footer-logo-link" data-testid="footer-logo">
+              {/* Dynamic Theme Logo */}
+              <img
+                src={isDark ? "/images/gklogo-dark.png" : "/images/gklogo.png"}
+                alt="GK Nexergy Logo"
+                className={`footer-logo-img ${isDark ? "dark-only" : "light-only"}`}
+              />
+            </Link>
           <div className="footer-tagline-wrapper">
             <div className="footer-tagline-item">
               <span className="tagline-icon">
@@ -119,6 +137,7 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default Footer;

@@ -5,7 +5,7 @@
  * industry, contact channel, and company statement across the entire website.
  */
 
-import { SOLUTIONS, COURSES, INDUSTRIES, NAV } from "../data/site";
+import { SOLUTIONS, COURSES, INDUSTRIES, NAV } from "../data/site.js";
 
 export const FULL_SITE_CORPUS = [
   // 1. COMPANY & IDENTITY

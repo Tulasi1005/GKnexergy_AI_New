@@ -84,8 +84,8 @@ const Shell = ({ theme, onToggleTheme }) => {
                     <Route path="*" element={<Home />} />
                 </Routes>
             </main>
-            {!isLanding && <Footer />}
-            <AIChatbot theme={theme} />
+            {!isLanding && <Footer theme={theme} />}
+            {!isLanding && <AIChatbot theme={theme} />}
         </div>
     );
 };

@@ -3,72 +3,78 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Sparkles,
   X,
   Send,
-  ArrowUp,
-  Key,
   RotateCcw,
   ExternalLink,
   ChevronRight,
   Maximize2,
   Minimize2,
-  Check,
-  ChevronDown,
+  Key,
   ArrowDown,
 } from "lucide-react";
 import { askGKChatbot } from "../../utils/aiKnowledgeEngine";
 
-// Minimal, elegant conversation starter pills
+// Conversation starter pills
 const STARTER_SUGGESTIONS = [
-  "Explore AI & Automation",
   "What does GK Nexergy do?",
+  "Which AI solutions do you provide?",
   "Nexergy Academy courses",
   "Talk about a project",
   "How can I contact the team?",
 ];
 
-// Minimal Abstract AI Avatar Mark
-const AIAvatarMark = ({ size = 32, isResponding = false }) => (
+// GK Nexergy Official Logo Avatar Mark
+const AIAvatarMark = ({ size = 36, isResponding = false }) => (
   <div
-    className="relative flex items-center justify-center shrink-0 rounded-xl overflow-hidden"
     style={{
       width: `${size}px`,
       height: `${size}px`,
-      background: "linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%)",
+      borderRadius: "50%",
+      backgroundColor: "#ffffff",
+      border: "1px solid #e2e8f0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+      flexShrink: 0,
       boxShadow: isResponding
-        ? "0 0 16px rgba(56, 189, 248, 0.6), 0 0 4px rgba(37, 99, 235, 0.8)"
-        : "0 4px 12px rgba(37, 99, 235, 0.3)",
+        ? "0 0 10px rgba(56, 189, 248, 0.6), 0 0 3px rgba(37, 99, 235, 0.8)"
+        : "0 1px 4px rgba(0, 0, 0, 0.05)",
       transition: "box-shadow 0.3s ease",
     }}
   >
-    {/* Geometric Interconnected Nodes */}
-    <svg
-      width={size * 0.6}
-      height={size * 0.6}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <img
+      src="/images/gk-avatar-badge.png"
+      alt="GK Nexergy Logo"
+      style={{ width: "100%", height: "100%", objectFit: "contain", padding: "2px" }}
       className={isResponding ? "animate-pulse" : ""}
-    >
-      <circle cx="12" cy="12" r="3" fill="white" />
-      <path d="M12 3v3" />
-      <path d="M12 18v3" />
-      <path d="M3 12h3" />
-      <path d="M18 12h3" />
-      <circle cx="12" cy="3" r="1.5" fill="white" />
-      <circle cx="12" cy="21" r="1.5" fill="white" />
-      <circle cx="3" cy="12" r="1.5" fill="white" />
-      <circle cx="21" cy="12" r="1.5" fill="white" />
-    </svg>
-    {isResponding && (
-      <span className="absolute inset-0 rounded-xl border border-sky-300 animate-ping opacity-30" />
-    )}
+    />
   </div>
 );
+
+// Format markdown (bolding in sky blue #0284c7 in light mode)
+const formatMarkdown = (text, isDark, isUser) => {
+  if (!text) return "";
+  let formatted = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Bold **text** -> vibrant sky blue highlight in assistant messages
+  formatted = formatted.replace(
+    /\*\*(.*?)\*\*/g,
+    `<strong style="font-weight: 600; color: ${isUser ? "#ffffff" : isDark ? "#60a5fa" : "#0284c7"};">$1</strong>`
+  );
+
+  // Italic *text*
+  formatted = formatted.replace(
+    /\*(.*?)\*/g,
+    `<em style="font-style: italic; opacity: 0.9;">$1</em>`
+  );
+
+  return formatted;
+};
 
 export const AIChatbot = ({ theme = "light" }) => {
   const navigate = useNavigate();
@@ -77,12 +83,21 @@ export const AIChatbot = ({ theme = "light" }) => {
   const [chatInput, setChatInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [activeTopic, setActiveTopic] = useState("general");
-  const [showKeyModal, setShowKeyModal] = useState(false);
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem("gk_openai_key") || "");
-  const [keyInput, setKeyInput] = useState(() => localStorage.getItem("gk_openai_key") || "");
-  const [keySaved, setKeySaved] = useState(false);
   const [hasNewMessageBelow, setHasNewMessageBelow] = useState(false);
+  const [chipsScrollPercent, setChipsScrollPercent] = useState(0);
 
+  const chatFeedRef = useRef(null);
+  const inputRef = useRef(null);
+  const chipsContainerRef = useRef(null);
+  const sliderTrackRef = useRef(null);
+  const userScrolledUpRef = useRef(false);
+  const isDraggingChipsRef = useRef(false);
+  const chipsDragStartXRef = useRef(0);
+  const chipsDragScrollLeftRef = useRef(0);
+  const chipsHasDraggedRef = useRef(false);
+  const isDark = theme === "dark";
+
+  // Exact welcome text from the user reference
   const initialWelcomeText = `Hi 👋
 I'm the **GK Nexergy AI assistant**.
 
@@ -91,10 +106,13 @@ I can help you explore our enterprise solutions, academy courses, client project
 What would you like to know?`;
 
   const [messages, setMessages] = useState(() => {
-    const saved = sessionStorage.getItem("gk_chat_history_v2");
+    const saved = sessionStorage.getItem("gk_chat_classic_v2");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].text?.includes("GK Nexergy AI assistant")) {
+          return parsed;
+        }
       } catch (e) {
         // ignore
       }
@@ -110,21 +128,16 @@ What would you like to know?`;
     ];
   });
 
-  const chatFeedRef = useRef(null);
-  const inputRef = useRef(null);
-  const userScrolledUpRef = useRef(false);
-  const isDark = theme === "dark";
+  // Save conversation history to sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("gk_chat_classic_v2", JSON.stringify(messages));
+    } catch (e) {
+      // ignore
+    }
+  }, [messages]);
 
-  // Check if feed is near bottom
-  const isNearBottom = useCallback(() => {
-    const feed = chatFeedRef.current;
-    if (!feed) return true;
-    const isOverflowing = feed.scrollHeight > feed.clientHeight + 20;
-    if (!isOverflowing) return true;
-    return !userScrolledUpRef.current;
-  }, []);
-
-  // Smoothly scroll feed to bottom without affecting window scroll
+  // Smoothly scroll feed to bottom
   const scrollToBottom = useCallback((behavior = "smooth") => {
     const feed = chatFeedRef.current;
     if (feed) {
@@ -142,7 +155,7 @@ What would you like to know?`;
     const feed = chatFeedRef.current;
     if (!feed) return;
     const distanceToBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight;
-    if (distanceToBottom > 40) {
+    if (distanceToBottom > 60) {
       userScrolledUpRef.current = true;
     } else {
       userScrolledUpRef.current = false;
@@ -150,57 +163,107 @@ What would you like to know?`;
     }
   }, []);
 
-  // Global event listener for opening chatbot from anywhere
-  useEffect(() => {
-    const handleGlobalOpen = (e) => {
-      setIsOpen(true);
-      if (e?.detail?.query) {
-        handleSend(e.detail.query);
+  // Track chips scroll
+  const handleChipsScroll = () => {
+    const el = chipsContainerRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll > 0) {
+      const pct = Math.max(0, Math.min(100, (el.scrollLeft / maxScroll) * 100));
+      setChipsScrollPercent(pct);
+    } else {
+      setChipsScrollPercent(0);
+    }
+  };
+
+  const scrollChips = (dir) => {
+    const el = chipsContainerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * 180, behavior: "smooth" });
+  };
+
+  // Slider track interactive scrubbing / clicking
+  const handleTrackPointerDown = (e) => {
+    const track = sliderTrackRef.current;
+    const container = chipsContainerRef.current;
+    if (!track || !container) return;
+
+    const updateScroll = (clientX) => {
+      const rect = track.getBoundingClientRect();
+      const clickX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (maxScroll <= 0) return;
+      const ratio = clickX / rect.width;
+      container.scrollLeft = ratio * maxScroll;
+    };
+
+    updateScroll(e.clientX ?? e.touches?.[0]?.clientX ?? 0);
+
+    const onPointerMove = (ev) => {
+      const clientX = ev.clientX ?? ev.touches?.[0]?.clientX;
+      if (clientX !== undefined) {
+        updateScroll(clientX);
       }
     };
-    window.addEventListener("open-gk-chatbot", handleGlobalOpen);
-    return () => window.removeEventListener("open-gk-chatbot", handleGlobalOpen);
-  }, []);
 
-  // Save messages to session
-  useEffect(() => {
-    try {
-      sessionStorage.setItem("gk_chat_history_v2", JSON.stringify(messages));
-    } catch (e) {
-      // ignore
+    const onPointerUp = () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("touchmove", onPointerMove);
+      window.removeEventListener("touchend", onPointerUp);
+    };
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("touchmove", onPointerMove, { passive: true });
+    window.addEventListener("touchend", onPointerUp);
+  };
+
+  // Drag-to-scroll on the suggestion chips container directly
+  const handleChipsMouseDown = (e) => {
+    if (!chipsContainerRef.current) return;
+    isDraggingChipsRef.current = true;
+    chipsHasDraggedRef.current = false;
+    chipsDragStartXRef.current = e.pageX - chipsContainerRef.current.offsetLeft;
+    chipsDragScrollLeftRef.current = chipsContainerRef.current.scrollLeft;
+  };
+
+  const handleChipsMouseMove = (e) => {
+    if (!isDraggingChipsRef.current || !chipsContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - chipsContainerRef.current.offsetLeft;
+    const walk = (x - chipsDragStartXRef.current) * 1.5;
+    if (Math.abs(walk) > 5) {
+      chipsHasDraggedRef.current = true;
     }
-  }, [messages]);
+    chipsContainerRef.current.scrollLeft = chipsDragScrollLeftRef.current - walk;
+  };
 
-  // Handle new message arrival: only auto-scroll if user has not scrolled up
+  const handleChipsMouseUp = () => {
+    isDraggingChipsRef.current = false;
+  };
+
+  // Keep feed scrolled to latest message
   useEffect(() => {
     if (!isOpen) return;
+    const timer = setTimeout(() => {
+      scrollToBottom("smooth");
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [messages, isTyping, isOpen, scrollToBottom]);
 
-    if (!userScrolledUpRef.current) {
-      requestAnimationFrame(() => {
-        scrollToBottom("smooth");
-      });
-    } else {
-      setHasNewMessageBelow(true);
-    }
-  }, [messages, isOpen, scrollToBottom]);
-
-  // Focus input when opened & handle Escape key
+  // Focus input when opened
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 200);
-
-      const handleKeyDown = (e) => {
-        if (e.key === "Escape") {
-          setIsOpen(false);
-        }
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 150);
     }
   }, [isOpen]);
 
-  const handleSend = async (customText = null) => {
-    const query = (customText || chatInput).trim();
+  // Handle Send logic
+  const handleSend = useCallback(async (customText = null) => {
+    const query = (customText !== null ? customText : chatInput).trim();
     if (!query) return;
 
     const userMsg = {
@@ -214,14 +277,12 @@ What would you like to know?`;
     setChatInput("");
     setIsTyping(true);
 
-    if (isNearBottom()) {
-      requestAnimationFrame(() => {
-        scrollToBottom("smooth");
-      });
-    }
+    setTimeout(() => {
+      scrollToBottom("smooth");
+    }, 20);
 
     try {
-      const response = await askGKChatbot(query, apiKey, {
+      const response = await askGKChatbot(query, "", {
         activeTopic,
         history: messages,
       });
@@ -243,21 +304,24 @@ What would you like to know?`;
       };
 
       setMessages((prev) => [...prev, botMsg]);
+
+      setTimeout(() => {
+        scrollToBottom("smooth");
+      }, 50);
     } catch (err) {
       setIsTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `bot-${Date.now()}`,
-          sender: "bot",
-          text: "I'm here to help. You can ask anything about GK Nexergy solutions, academy courses, or get in touch with our team.",
-          routes: [{ label: "Contact Us", to: "/contact" }],
-          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        },
-      ]);
+      const fallbackMsg = {
+        id: `bot-${Date.now()}`,
+        sender: "bot",
+        text: "I'm here to help! You can ask anything about GK Nexergy software solutions, academy courses, delivered projects, or connect directly with our engineering team in Visakhapatnam.",
+        routes: [{ label: "Contact Us", to: "/contact" }],
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+      setMessages((prev) => [...prev, fallbackMsg]);
     }
-  };
+  }, [chatInput, activeTopic, messages, scrollToBottom]);
 
+  // Key down event
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -265,35 +329,38 @@ What would you like to know?`;
     }
   };
 
-  const handleSaveKey = () => {
-    const trimmed = keyInput.trim();
-    setApiKey(trimmed);
-    localStorage.setItem("gk_openai_key", trimmed);
-    setKeySaved(true);
-    setTimeout(() => {
-      setKeySaved(false);
-      setShowKeyModal(false);
-    }, 1000);
-  };
+  // Global event listener for opening chatbot from anywhere
+  useEffect(() => {
+    const handleGlobalOpen = () => {
+      setIsOpen(true);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 200);
+    };
+    window.addEventListener("open-gk-chatbot", handleGlobalOpen);
+    return () => window.removeEventListener("open-gk-chatbot", handleGlobalOpen);
+  }, []);
 
   const handleClearHistory = () => {
-    sessionStorage.removeItem("gk_chat_history_v2");
+    sessionStorage.removeItem("gk_chat_classic_v2");
     setActiveTopic("general");
     setMessages([
       {
         id: `welcome-${Date.now()}`,
         sender: "bot",
-        text: `Conversation cleared.\n\nHow can I help you explore GK Nexergy today?`,
+        text: initialWelcomeText,
         time: "Just now",
         routes: [],
       },
     ]);
   };
 
+  const fontStack = "'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
   const chatbotJSX = (
-    <>
+    <div style={{ fontFamily: fontStack }}>
       {/* ========================================================= */}
-      {/* 1. MINIMAL FLOATING AI TRIGGER BUTTON                     */}
+      {/* 1. FLOATING CHAT TRIGGER BUTTON                            */}
       {/* ========================================================= */}
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 10 }}
@@ -305,47 +372,93 @@ What would you like to know?`;
           bottom: "24px",
           right: "24px",
           zIndex: 99999999,
+          fontFamily: fontStack,
         }}
       >
         <button
           data-testid="floating-chatbot-toggle"
           onClick={() => setIsOpen((prev) => !prev)}
-          aria-label={isOpen ? "Close GK Nexergy AI Assistant" : "Open GK Nexergy AI Assistant"}
-          className="group relative flex items-center gap-2.5 rounded-full px-4 py-2.5 text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-xl hover:scale-105 active:scale-95"
+          aria-label={isOpen ? "Close GK Nexergy AI Assistant" : "GK Nexergy AI Assistant"}
+          className="group relative flex items-center transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 select-none"
           style={{
             background: isOpen
               ? isDark
                 ? "#0f172a"
                 : "#ffffff"
-              : "linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #0284c7 100%)",
-            color: isOpen ? (isDark ? "#f8fafc" : "#0f172a") : "#ffffff",
+              : isDark
+                ? "linear-gradient(135deg, #1d4ed8 0%, #0284c7 100%)"
+                : "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)",
+            color: isOpen ? (isDark ? "#f8fafc" : "#0284c7") : "#ffffff",
             border: isOpen
               ? isDark
-                ? "1px solid rgba(255, 255, 255, 0.12)"
-                : "1px solid rgba(0, 0, 0, 0.08)"
-              : "1px solid rgba(255, 255, 255, 0.2)",
+                ? "1px solid rgba(255, 255, 255, 0.15)"
+                : "1px solid rgba(2, 132, 199, 0.2)"
+              : "none",
             boxShadow: isOpen
               ? isDark
-                ? "0 10px 30px rgba(0, 0, 0, 0.6)"
-                : "0 10px 30px rgba(15, 23, 42, 0.12)"
-              : "0 10px 25px rgba(37, 99, 235, 0.45), 0 0 15px rgba(56, 189, 248, 0.25)",
+                ? "0 10px 30px rgba(0, 0, 0, 0.7)"
+                : "0 10px 30px rgba(2, 132, 199, 0.15)"
+              : "0 12px 28px rgba(14, 165, 233, 0.45), 0 4px 10px rgba(14, 165, 233, 0.2)",
+            borderRadius: "9999px",
+            padding: isOpen ? "8px 16px" : "5px 18px 5px 6px",
+            fontFamily: fontStack,
+            height: "46px",
           }}
         >
           {isOpen ? (
-            <div className="flex items-center gap-1.5">
-              <X className={`h-4 w-4 ${isDark ? "text-slate-300" : "text-slate-700"}`} />
-              <span className="text-xs font-semibold">Close</span>
+            <div className="flex items-center gap-2 px-1">
+              <X className={`h-4 w-4 ${isDark ? "text-slate-100" : "text-sky-700"}`} />
+              <span style={{ fontSize: "13px", fontWeight: 700 }}>Close</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2.5">
-              <div className="relative flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white group-hover:rotate-12 transition-transform duration-200" />
-                <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                </span>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div
+                style={{
+                  position: "relative",
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  backgroundColor: "#f0f9ff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  overflow: "visible",
+                }}
+              >
+                <img
+                  src="/images/gk-avatar-badge.png"
+                  alt="GK Nexergy Logo"
+                  style={{
+                    width: "82%",
+                    height: "82%",
+                    objectFit: "contain",
+                    borderRadius: "50%",
+                  }}
+                  className="group-hover:scale-105 transition-transform duration-200"
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-1px",
+                    right: "-1px",
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: "#10b981",
+                    border: "2px solid #0ea5e9",
+                  }}
+                />
               </div>
-              <span className="tracking-wide text-xs sm:text-[13px] font-semibold text-white">
+              <span
+                style={{
+                  color: "#ffffff",
+                  fontWeight: 700,
+                  fontSize: "14px",
+                  letterSpacing: "-0.01em",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 GK Nexergy AI
               </span>
             </div>
@@ -354,7 +467,7 @@ What would you like to know?`;
       </motion.div>
 
       {/* ========================================================= */}
-      {/* 2. REFINED FLOATING AI ASSISTANT PANEL                    */}
+      {/* 2. FLOATING CHAT PANEL (Exact Classic Reference Style)     */}
       {/* ========================================================= */}
       <AnimatePresence>
         {isOpen && (
@@ -364,85 +477,74 @@ What would you like to know?`;
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             data-testid="ai-chatbot-window"
+            data-lenis-prevent="true"
             role="dialog"
             aria-label="GK Nexergy AI Assistant"
-            className="flex flex-col overflow-hidden rounded-2xl shadow-2xl transition-colors duration-200 font-sans"
+            className="flex flex-col overflow-hidden shadow-2xl select-none"
             style={{
               position: "fixed",
-              bottom: "76px",
+              bottom: "74px",
               right: "24px",
               zIndex: 99999998,
-              width: isExpanded ? "min(680px, calc(100vw - 32px))" : "min(400px, calc(100vw - 32px))",
-              height: isExpanded ? "min(680px, calc(100vh - 96px))" : "min(580px, calc(100vh - 96px))",
-              background: isDark ? "#090d16" : "#ffffff",
-              border: isDark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.08)",
+              width: isExpanded ? "min(640px, calc(100vw - 32px))" : "min(385px, calc(100vw - 32px))",
+              height: isExpanded ? "min(660px, calc(100vh - 96px))" : "min(560px, calc(100vh - 96px))",
+              borderRadius: "18px",
+              backgroundColor: isDark ? "#090e18" : "#f0f4f9",
+              border: isDark ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid #dbe4f0",
               boxShadow: isDark
-                ? "0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255, 255, 255, 0.05)"
-                : "0 20px 50px -10px rgba(15, 23, 42, 0.15), 0 0 1px 1px rgba(0, 0, 0, 0.04)",
+                ? "0 25px 60px -10px rgba(0, 0, 0, 0.85), 0 0 1px 1px rgba(255, 255, 255, 0.08)"
+                : "0 20px 50px -10px rgba(15, 23, 42, 0.16), 0 0 1px 1px rgba(0, 0, 0, 0.04)",
               color: isDark ? "#f8fafc" : "#0f172a",
+              fontFamily: fontStack,
             }}
           >
-            {/* --- COMPACT SLEEK HEADER --- */}
+            {/* --- HEADER --- */}
             <div
-              className="flex items-center justify-between px-4 py-3 relative z-10 shrink-0"
               style={{
-                background: isDark ? "#0c1322" : "#f8fafc",
-                borderBottom: isDark ? "1px solid rgba(255, 255, 255, 0.06)" : "1px solid #f1f5f9",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "12px 16px",
+                backgroundColor: isDark ? "#0c1322" : "#ffffff",
+                borderBottom: isDark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid #e5eaf2",
+                flexShrink: 0,
               }}
             >
-              <div className="flex items-center gap-3">
-                <AIAvatarMark size={32} isResponding={isTyping} />
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <AIAvatarMark size={36} isResponding={isTyping} />
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className={`text-xs sm:text-[13px] font-bold tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span style={{ fontSize: "14px", fontWeight: 700, color: isDark ? "#ffffff" : "#0f172a", letterSpacing: "-0.01em" }}>
                       GK Nexergy AI
-                    </h3>
-                    <span className="flex items-center gap-1 text-[10px] font-medium text-emerald-500">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    </span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", color: "#10b981", fontSize: "11.5px", fontWeight: 600 }}>
+                      <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10b981" }} />
                       Online
                     </span>
                   </div>
-                  <p className={`text-[10px] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                    Your intelligent digital guide
-                  </p>
                 </div>
               </div>
 
-              {/* Minimal Header Controls */}
-              <div className="flex items-center gap-1">
-                <button
-                  data-testid="ai-key-btn"
-                  onClick={() => setShowKeyModal(true)}
-                  title="Configure OpenAI Key (Optional)"
-                  aria-label="Configure OpenAI Key"
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors cursor-pointer ${
-                    isDark ? "text-slate-400 hover:text-slate-200 hover:bg-slate-800" : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/60"
-                  }`}
-                >
-                  <Key className="h-3.5 w-3.5" />
-                </button>
-
+              {/* Controls */}
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: isDark ? "#94a3b8" : "#64748b" }}>
                 <button
                   data-testid="ai-clear-btn"
                   onClick={handleClearHistory}
-                  title="Clear conversation"
-                  aria-label="Clear conversation"
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors cursor-pointer ${
-                    isDark ? "text-slate-400 hover:text-rose-400 hover:bg-slate-800" : "text-slate-500 hover:text-rose-600 hover:bg-slate-200/60"
-                  }`}
+                  title="Refresh conversation"
+                  aria-label="Refresh conversation"
+                  style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", padding: "4px", display: "flex", alignItems: "center" }}
                 >
-                  <RotateCcw className="h-3.5 w-3.5" />
+                  <RotateCcw style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} />
                 </button>
 
                 <button
                   onClick={() => setIsExpanded((prev) => !prev)}
                   title={isExpanded ? "Collapse width" : "Expand width"}
                   aria-label={isExpanded ? "Collapse width" : "Expand width"}
-                  className={`hidden sm:flex h-7 w-7 items-center justify-center rounded-lg transition-colors cursor-pointer ${
-                    isDark ? "text-slate-400 hover:text-slate-200 hover:bg-slate-800" : "text-slate-500 hover:text-slate-800 hover:bg-slate-200/60"
-                  }`}
+                  style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", padding: "4px", display: "flex", alignItems: "center" }}
+                  className="hidden sm:flex"
                 >
-                  {isExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+                  {isExpanded ? <Minimize2 style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} /> : <Maximize2 style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} />}
                 </button>
 
                 <button
@@ -450,69 +552,95 @@ What would you like to know?`;
                   onClick={() => setIsOpen(false)}
                   title="Close assistant"
                   aria-label="Close assistant"
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors cursor-pointer ${
-                    isDark ? "text-slate-400 hover:text-white hover:bg-slate-800" : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/60"
-                  }`}
+                  style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", padding: "4px", display: "flex", alignItems: "center" }}
                 >
-                  <X className="h-3.5 w-3.5" />
+                  <X style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} />
                 </button>
               </div>
             </div>
 
-            {/* --- CONVERSATION FEED (Smooth Native Scroll Container) --- */}
-            <div className="relative flex-1 flex flex-col min-h-0 overflow-hidden h-full">
+            {/* --- CONVERSATION FEED --- */}
+            <div style={{ position: "relative", flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
               <div
                 ref={chatFeedRef}
+                className="gk-chat-feed-scroll"
                 onScroll={handleFeedScroll}
-                className="flex-1 overflow-y-auto p-4 space-y-4 text-xs select-text"
+                onWheel={(e) => e.stopPropagation()}
+                data-lenis-prevent="true"
                 style={{
-                  scrollBehavior: "smooth",
+                  flex: 1,
+                  overflowY: "auto",
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "14px",
                   maxHeight: "100%",
+                  overscrollBehavior: "contain",
+                  touchAction: "pan-y",
+                  scrollBehavior: "smooth",
                 }}
               >
                 {messages.map((msg) => {
                   const isUser = msg.sender === "user";
+
                   return (
                     <motion.div
                       key={msg.id}
-                      initial={{ opacity: 0, y: 4 }}
+                      initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
+                      transition={{ duration: 0.18 }}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: isUser ? "flex-end" : "flex-start",
+                        width: "100%",
+                      }}
                     >
-                      {/* Message Bubble / Natural Text Container */}
+                      {/* Message Bubble Card */}
                       <div
-                        className={`relative max-w-[88%] leading-relaxed ${
-                          isUser
-                            ? "bg-blue-600 text-white rounded-2xl rounded-tr-xs px-3.5 py-2.5 text-xs font-normal shadow-sm"
-                            : isDark
-                            ? "bg-[#111927] text-slate-200 rounded-2xl rounded-tl-xs px-4 py-3 border border-white/5 shadow-xs"
-                            : "bg-[#f1f5f9] text-slate-800 rounded-2xl rounded-tl-xs px-4 py-3 border border-slate-200/60 shadow-xs"
-                        }`}
+                        style={{
+                          maxWidth: "92%",
+                          backgroundColor: isUser ? undefined : isDark ? "#111a2e" : "#ffffff",
+                          background: isUser
+                            ? isDark
+                              ? "linear-gradient(135deg, #1d4ed8 0%, #0284c7 100%)"
+                              : "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)"
+                            : undefined,
+                          color: isUser ? "#ffffff" : isDark ? "#e2e8f0" : "#334155",
+                          borderRadius: isUser ? "16px 16px 4px 16px" : "16px",
+                          border: isUser ? "none" : isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e2e8f0",
+                          padding: isUser ? "10px 14px" : "16px 18px",
+                          boxShadow: isUser
+                            ? "0 2px 8px rgba(14, 165, 233, 0.28)"
+                            : "0 2px 8px rgba(0, 0, 0, 0.03)",
+                          fontSize: isUser ? "13px" : "13.5px",
+                          lineHeight: 1.6,
+                          letterSpacing: "-0.01em",
+                        }}
                       >
-                        {/* Natural Markdown Content */}
-                        <div className="space-y-2 whitespace-pre-line text-[12.5px] leading-relaxed">
+                        {/* Text Content */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "10px", whiteSpace: "pre-line" }}>
                           {msg.text.split("\n\n").map((paragraph, pIdx) => {
                             if (paragraph.includes("- ") || paragraph.includes("• ") || paragraph.includes("1. ")) {
                               const lines = paragraph.split("\n");
                               return (
-                                <div key={pIdx} className="space-y-1.5 my-1.5">
+                                <div key={pIdx} style={{ display: "flex", flexDirection: "column", gap: "4px", margin: "4px 0" }}>
                                   {lines.map((line, lIdx) => {
                                     const isBullet = line.trim().startsWith("- ") || line.trim().startsWith("• ");
                                     const isNumbered = /^\d+\.\s/.test(line.trim());
                                     const cleanText = line.replace(/^[-•]\s*/, "").replace(/^\d+\.\s*/, "");
 
                                     return (
-                                      <div key={lIdx} className="flex items-start gap-2 pl-0.5">
+                                      <div key={lIdx} style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
                                         {isBullet && (
-                                          <span className={`mt-0.5 font-bold text-xs ${isDark ? "text-sky-400" : "text-blue-600"}`}>•</span>
+                                          <span style={{ fontWeight: 700, fontSize: "13px", color: isUser ? "#ffffff" : isDark ? "#38bdf8" : "#0284c7", flexShrink: 0 }}>•</span>
                                         )}
                                         {isNumbered && (
-                                          <span className={`font-semibold text-[11px] mt-0.5 ${isDark ? "text-sky-400" : "text-blue-600"}`}>
+                                          <span style={{ fontWeight: 700, fontSize: "11px", color: isUser ? "#ffffff" : isDark ? "#38bdf8" : "#0284c7", flexShrink: 0 }}>
                                             {line.match(/^\d+\./)?.[0]}
                                           </span>
                                         )}
-                                        <span dangerouslySetInnerHTML={{ __html: formatMarkdown(cleanText, isDark) }} />
+                                        <span dangerouslySetInnerHTML={{ __html: formatMarkdown(cleanText, isDark, isUser) }} />
                                       </div>
                                     );
                                   })}
@@ -523,16 +651,17 @@ What would you like to know?`;
                             return (
                               <p
                                 key={pIdx}
-                                dangerouslySetInnerHTML={{ __html: formatMarkdown(paragraph, isDark) }}
+                                style={{ margin: 0 }}
+                                dangerouslySetInnerHTML={{ __html: formatMarkdown(paragraph, isDark, isUser) }}
                               />
                             );
                           })}
                         </div>
 
-                        {/* Subtle Contextual Action Pills (Max 1-2 when provided) */}
+                        {/* Navigation Route Shortcuts */}
                         {msg.routes && msg.routes.length > 0 && (
-                          <div className="mt-3 pt-2.5 flex flex-wrap gap-1.5 border-t border-slate-200/30 dark:border-white/5">
-                            {msg.routes.slice(0, 2).map((route, rIdx) => (
+                          <div style={{ marginTop: "12px", paddingTop: "8px", display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                            {msg.routes.slice(0, 3).map((route, rIdx) => (
                               <button
                                 key={rIdx}
                                 onClick={() => {
@@ -543,17 +672,26 @@ What would you like to know?`;
                                     navigate(route.to);
                                   }
                                 }}
-                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all duration-150 cursor-pointer ${
-                                  isDark
-                                    ? "bg-blue-950/60 hover:bg-blue-900/80 text-sky-300 border border-blue-800/40"
-                                    : "bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/60"
-                                }`}
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  padding: "5px 10px",
+                                  borderRadius: "8px",
+                                  fontSize: "11.5px",
+                                  fontWeight: 600,
+                                  cursor: "pointer",
+                                  border: isDark ? "1px solid rgba(59, 130, 246, 0.4)" : "1px solid #bae6fd",
+                                  backgroundColor: isDark ? "rgba(30, 58, 138, 0.6)" : "#f0f9ff",
+                                  color: isDark ? "#93c5fd" : "#0284c7",
+                                  transition: "all 0.15s ease",
+                                }}
                               >
                                 <span>{route.label}</span>
                                 {route.external ? (
-                                  <ExternalLink className="h-3 w-3 opacity-70" />
+                                  <ExternalLink style={{ width: "13px", height: "13px", opacity: 0.8 }} />
                                 ) : (
-                                  <ChevronRight className="h-3 w-3 opacity-70" />
+                                  <ChevronRight style={{ width: "13px", height: "13px", opacity: 0.8 }} />
                                 )}
                               </button>
                             ))}
@@ -561,24 +699,40 @@ What would you like to know?`;
                         )}
                       </div>
 
-                      <span className={`text-[9.5px] mt-1 px-1 font-mono ${isDark ? "text-slate-500" : "text-slate-400"}`}>
+                      {/* Timestamp */}
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          marginTop: "5px",
+                          paddingLeft: "4px",
+                          fontFamily: "'Space Grotesk', monospace",
+                          color: isDark ? "#64748b" : "#94a3b8",
+                        }}
+                      >
                         {msg.time}
                       </span>
                     </motion.div>
                   );
                 })}
 
-                {/* Subtle Typing Indicator */}
+                {/* Typing Indicator */}
                 {isTyping && (
                   <motion.div
                     initial={{ opacity: 0, y: 3 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 pl-1 py-1 text-xs"
+                    style={{ display: "flex", alignItems: "center", gap: "6px" }}
                   >
+                    <AIAvatarMark size={24} isResponding={true} />
                     <div
-                      className={`flex items-center gap-1 px-3 py-2 rounded-xl ${
-                        isDark ? "bg-[#111927] text-slate-400 border border-white/5" : "bg-[#f1f5f9] text-slate-500 border border-slate-200/60"
-                      }`}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        padding: "8px 12px",
+                        borderRadius: "14px",
+                        backgroundColor: isDark ? "#111a2e" : "#ffffff",
+                        border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e2e8f0",
+                      }}
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: "0ms" }} />
                       <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -588,7 +742,7 @@ What would you like to know?`;
                 )}
               </div>
 
-              {/* Floating "↓ New message" Indicator (shows ONLY if user has scrolled up) */}
+              {/* Floating "↓ New message" Indicator */}
               <AnimatePresence>
                 {hasNewMessageBelow && (
                   <motion.button
@@ -596,52 +750,174 @@ What would you like to know?`;
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.95 }}
                     onClick={() => scrollToBottom("smooth")}
-                    className="absolute bottom-3 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium shadow-lg cursor-pointer transition-transform hover:scale-105"
                     style={{
-                      background: isDark ? "#1e293b" : "#ffffff",
+                      position: "absolute",
+                      bottom: "12px",
+                      right: "16px",
+                      zIndex: 20,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      padding: "5px 10px",
+                      borderRadius: "9999px",
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      backgroundColor: isDark ? "#1e293b" : "#ffffff",
                       color: isDark ? "#38bdf8" : "#2563eb",
-                      border: isDark ? "1px solid rgba(56, 189, 248, 0.3)" : "1px solid rgba(37, 99, 235, 0.2)",
-                      boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+                      border: isDark ? "1px solid rgba(56, 189, 248, 0.4)" : "1px solid rgba(37, 99, 235, 0.3)",
+                      boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
                     }}
                   >
-                    <ArrowDown className="h-3 w-3" />
+                    <ArrowDown style={{ width: "12px", height: "12px" }} />
                     <span>New message</span>
                   </motion.button>
                 )}
               </AnimatePresence>
             </div>
 
-            {/* --- LIGHTWEIGHT STARTER SUGGESTIONS (Shown only when starting) --- */}
+            {/* --- STARTER SUGGESTION CHIPS (Exact reference layout with interactive responsive slider) --- */}
             {messages.length <= 2 && !isTyping && (
-              <div
-                className="px-3.5 py-2 flex gap-1.5 overflow-x-auto no-scrollbar relative z-10 shrink-0"
-                style={{
-                  background: isDark ? "#090d16" : "#f8fafc",
-                  borderTop: isDark ? "1px solid rgba(255, 255, 255, 0.04)" : "1px solid #f1f5f9",
-                }}
-              >
-                {STARTER_SUGGESTIONS.map((suggestion, idx) => (
+              <div style={{ padding: "6px 12px 10px 12px", flexShrink: 0 }}>
+                <div
+                  ref={chipsContainerRef}
+                  onScroll={handleChipsScroll}
+                  onMouseDown={handleChipsMouseDown}
+                  onMouseMove={handleChipsMouseMove}
+                  onMouseUp={handleChipsMouseUp}
+                  onMouseLeave={handleChipsMouseUp}
+                  onWheel={(e) => {
+                    if (e.deltaY !== 0 || e.deltaX !== 0) {
+                      e.stopPropagation();
+                      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                      chipsContainerRef.current.scrollLeft += delta;
+                    }
+                  }}
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    overflowX: "auto",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                    scrollBehavior: "smooth",
+                    cursor: "grab",
+                    userSelect: "none",
+                    WebkitOverflowScrolling: "touch",
+                  }}
+                  className="no-scrollbar"
+                >
+                  {STARTER_SUGGESTIONS.map((suggestion, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        if (chipsHasDraggedRef.current) return;
+                        handleSend(suggestion);
+                      }}
+                      style={{
+                        flexShrink: 0,
+                        padding: "8px 14px",
+                        borderRadius: "10px",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                        cursor: "pointer",
+                        whiteSpace: "nowrap",
+                        backgroundColor: isDark ? "#162238" : "#e0f2fe",
+                        color: isDark ? "#93c5fd" : "#0369a1",
+                        border: isDark ? "1px solid #2a3d5e" : "1px solid #bae6fd",
+                        transition: "all 0.15s ease",
+                        fontFamily: fontStack,
+                      }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Horizontal Scroll Track Slider */}
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "8px", padding: "0 2px" }}>
                   <button
-                    key={idx}
-                    onClick={() => handleSend(suggestion)}
-                    className={`shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all duration-150 cursor-pointer ${
-                      isDark
-                        ? "bg-[#111927] text-slate-300 hover:text-white hover:bg-blue-600/20 border border-white/5"
-                        : "bg-white text-slate-700 hover:text-blue-700 hover:bg-blue-50/80 border border-slate-200/70 shadow-2xs"
-                    }`}
+                    type="button"
+                    onClick={() => scrollChips(-1)}
+                    aria-label="Scroll left"
+                    title="Scroll left"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      color: isDark ? "#94a3b8" : "#64748b",
+                      fontSize: "10px",
+                      padding: "2px 4px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "4px",
+                      userSelect: "none",
+                    }}
                   >
-                    {suggestion}
+                    ◀
                   </button>
-                ))}
+
+                  {/* Interactive Track & Draggable Thumb */}
+                  <div
+                    ref={sliderTrackRef}
+                    onPointerDown={handleTrackPointerDown}
+                    style={{
+                      flex: 1,
+                      height: "6px",
+                      backgroundColor: isDark ? "#1e293b" : "#cbd5e1",
+                      borderRadius: "9999px",
+                      overflow: "hidden",
+                      position: "relative",
+                      cursor: "pointer",
+                      touchAction: "none",
+                    }}
+                    title="Click or drag to scroll suggestions"
+                  >
+                    <div
+                      style={{
+                        height: "100%",
+                        backgroundColor: isDark ? "#64748b" : "#38bdf8",
+                        borderRadius: "9999px",
+                        width: "42%",
+                        marginLeft: `${Math.min(58, (chipsScrollPercent / 100) * 58)}%`,
+                        transition: "margin 0.08s ease-out",
+                        cursor: "grab",
+                        pointerEvents: "none",
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => scrollChips(1)}
+                    aria-label="Scroll right"
+                    title="Scroll right"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      color: isDark ? "#94a3b8" : "#64748b",
+                      fontSize: "10px",
+                      padding: "2px 4px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "4px",
+                      userSelect: "none",
+                    }}
+                  >
+                    ▶
+                  </button>
+                </div>
               </div>
             )}
 
-            {/* --- SLEEK MODERN INPUT BAR --- */}
+            {/* --- INPUT BAR --- */}
             <div
-              className="p-3 relative z-10 shrink-0"
               style={{
-                background: isDark ? "#0c1322" : "#f8fafc",
-                borderTop: isDark ? "1px solid rgba(255, 255, 255, 0.06)" : "1px solid #f1f5f9",
+                padding: "10px 12px 14px 12px",
+                backgroundColor: isDark ? "#090e18" : "#f0f4f9",
+                flexShrink: 0,
               }}
             >
               <form
@@ -649,13 +925,19 @@ What would you like to know?`;
                   e.preventDefault();
                   handleSend();
                 }}
-                className="flex items-center gap-2"
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
+                {/* Main Text Input Field with light sky blue border */}
                 <div
-                  className="flex-1 flex items-center rounded-xl px-3.5 py-1.5 transition-all focus-within:ring-2 focus-within:ring-blue-500/40"
                   style={{
-                    background: isDark ? "#111927" : "#ffffff",
-                    border: isDark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid #e2e8f0",
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: "12px",
+                    padding: "9px 14px",
+                    backgroundColor: isDark ? "#111a2e" : "#ffffff",
+                    border: isDark ? "2px solid rgba(96, 165, 250, 0.4)" : "2px solid #bae6fd",
+                    transition: "border-color 0.2s ease",
                   }}
                 >
                   <input
@@ -666,122 +948,52 @@ What would you like to know?`;
                     onKeyDown={handleKeyDown}
                     placeholder="Ask GK Nexergy anything..."
                     data-testid="ai-chat-input"
-                    className="w-full text-xs font-normal outline-none bg-transparent py-1"
                     style={{
-                      color: isDark ? "#f8fafc" : "#0f172a",
+                      width: "100%",
+                      border: "none",
+                      outline: "none",
+                      background: "transparent",
+                      fontSize: "13px",
+                      color: isDark ? "#ffffff" : "#0f172a",
+                      fontFamily: fontStack,
                     }}
                   />
                 </div>
 
+                {/* Send Button */}
                 <button
                   type="submit"
                   disabled={!chatInput.trim() || isTyping}
                   data-testid="ai-send-btn"
                   aria-label="Send message"
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-sm active:scale-95"
+                  style={{
+                    width: "42px",
+                    height: "42px",
+                    borderRadius: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                    cursor: chatInput.trim() && !isTyping ? "pointer" : "not-allowed",
+                    backgroundColor: chatInput.trim() && !isTyping ? (isDark ? "#2563eb" : "#0284c7") : isDark ? "#111a2e" : "#ffffff",
+                    borderColor: chatInput.trim() && !isTyping ? (isDark ? "#2563eb" : "#0284c7") : isDark ? "rgba(255,255,255,0.1)" : "#dbe4f0",
+                    borderWidth: "1.5px",
+                    borderStyle: "solid",
+                    color: chatInput.trim() && !isTyping ? "#ffffff" : "#94a3b8",
+                    transition: "all 0.15s ease",
+                  }}
                 >
-                  <ArrowUp className="h-4 w-4" />
+                  <Send style={{ width: "16px", height: "16px" }} />
                 </button>
               </form>
             </div>
-
-            {/* --- OPTIONAL API KEY MODAL --- */}
-            <AnimatePresence>
-              {showKeyModal && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
-                >
-                  <motion.div
-                    initial={{ scale: 0.95 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.95 }}
-                    className={`w-full max-w-sm rounded-xl p-5 shadow-2xl ${
-                      isDark ? "bg-[#0c1424] text-white border border-slate-800" : "bg-white text-slate-900 shadow-2xl"
-                    }`}
-                  >
-                    <div className={`flex items-center justify-between pb-3 border-b ${isDark ? "border-slate-800" : "border-slate-100"}`}>
-                      <div className="flex items-center gap-2">
-                        <Key className="h-4 w-4 text-blue-500" />
-                        <h4 className="text-xs font-semibold">OpenAI API Key (Optional)</h4>
-                      </div>
-                      <button
-                        onClick={() => setShowKeyModal(false)}
-                        className={`rounded-lg p-1 ${isDark ? "text-slate-400 hover:text-white" : "text-slate-400 hover:text-slate-800"}`}
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-
-                    <p className={`mt-3 text-[11px] leading-relaxed ${isDark ? "text-slate-400" : "text-slate-600"}`}>
-                      Our built-in knowledge engine answers instantly offline. You may optionally provide an OpenAI API key for live GPT-4o inference.
-                    </p>
-
-                    <div className="mt-4 space-y-3">
-                      <input
-                        type="password"
-                        value={keyInput}
-                        onChange={(e) => setKeyInput(e.target.value)}
-                        placeholder="sk-..."
-                        className={`w-full rounded-lg px-3 py-2 text-xs outline-none ${
-                          isDark
-                            ? "bg-slate-900 border border-slate-700/80 text-white placeholder:text-slate-500 focus:border-blue-500"
-                            : "bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500"
-                        }`}
-                      />
-
-                      <div className="flex items-center justify-between gap-2 pt-1">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setKeyInput("");
-                            setApiKey("");
-                            localStorage.removeItem("gk_openai_key");
-                            setShowKeyModal(false);
-                          }}
-                          className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-500 hover:bg-rose-500/10 cursor-pointer"
-                        >
-                          Clear
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={handleSaveKey}
-                          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition-colors cursor-pointer shadow-sm"
-                        >
-                          {keySaved ? <Check className="h-3.5 w-3.5" /> : null}
-                          <span>{keySaved ? "Saved" : "Save Key"}</span>
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 
-  return typeof document !== "undefined" ? createPortal(chatbotJSX, document.body) : null;
+  return createPortal(chatbotJSX, document.body);
 };
-
-// Helper for formatting markdown syntax: links [text](url), **bold**, *italics*
-function formatMarkdown(str, isDark = true) {
-  if (!str) return "";
-  const strongClass = isDark ? "font-semibold text-sky-300" : "font-semibold text-blue-600";
-  const emClass = isDark ? "text-slate-300" : "text-slate-600";
-  const linkClass = isDark
-    ? "font-semibold text-sky-400 hover:text-sky-300 underline underline-offset-2 decoration-sky-400/40"
-    : "font-semibold text-blue-600 hover:text-blue-700 underline underline-offset-2 decoration-blue-600/40";
-
-  return str
-    .replace(/\[(.*?)\]\((.*?)\)/g, `<a href="$2" target="_blank" rel="noopener noreferrer" class="${linkClass}">$1</a>`)
-    .replace(/\*\*(.*?)\*\*/g, `<strong class="${strongClass}">$1</strong>`)
-    .replace(/\*(.*?)\*/g, `<em class="${emClass}">$1</em>`);
-}
 
 export default AIChatbot;
