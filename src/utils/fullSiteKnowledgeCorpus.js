@@ -14,8 +14,8 @@ export const FULL_SITE_CORPUS = [
     title: "About GK Nexergy & Core Mission",
     route: "/about",
     category: "company",
-    keywords: ["about", "story", "mission", "vision", "who are you", "what is gk nexergy", "founded", "vizag", "visakhapatnam"],
-    content: `**GK Nexergy** is an enterprise technology engineering and talent acceleration company based in **Visakhapatnam, Andhra Pradesh, India**.
+    keywords: ["about", "story", "mission", "vision", "who are you", "what is gk nexergy", "founded"],
+    content: `**GK Nexergy** is an enterprise technology engineering and talent acceleration company based in **Andhra Pradesh, India**.
 Operating under the guiding principle of **"Train. Build. Transform."**, GK Nexergy unites two powerful ecosystems:
 1. **Enterprise Solutions**: Engineering custom web platforms, native & cross-platform mobile apps, Generative AI workflows, and high-performance cloud architectures.
 2. **Nexergy Academy**: Empowering developers, students, and professionals with hands-on skills in Cyber Security & Ethical Hacking, PostgreSQL databases, Python, Cloud, and AI Marketing.
@@ -40,13 +40,25 @@ Core Differentiators:
 5. **Integrated Academy Talent Pipeline**: Direct access to trained engineering talent.`,
   },
   {
+    id: "pricing-plans",
+    title: "Pricing Plans & Engagement Models",
+    route: "/pricing",
+    category: "solutions",
+    keywords: ["pricing", "price", "plan", "plans", "starter", "growth", "premium", "cost", "fee", "rate", "pod cost", "engagement", "quote", "budget"],
+    content: `**GK Nexergy Pricing Plans & Engagement Tiers**:
+• **Starter Plan (>>)**: $1,499/mo (₹99,000/mo) or $2,999 Fixed Scope. 2–3 weeks rapid MVP delivery. Ideal for startups and MVPs. Includes React/Node web app, PostgreSQL, basic AI chatbot, 30-day warranty, and 100% IP ownership.
+• **Growth Plan (>>)**: $3,499/mo (₹2,49,000/mo) or $6,999 Multi-Sprint. Dedicated 2–3 person agile pod. Most popular for scaling businesses. Includes full-stack web + iOS/Android mobile apps, custom AI/RAG workflows, database optimization, CI/CD, and 60 days priority support.
+• **Premium Plan (>>)**: $6,999/mo (₹4,99,000/mo) or Custom Quote. Dedicated 4–6+ person pod with Lead Architect, Senior Devs, QA & DevOps. Includes enterprise digital transformation, custom autonomous AI reasoning engines, 99.99% uptime SLA, 24/7 priority support, and executive CTO advisory.
+All plans include 100% client source code ownership and zero lock-in.`,
+  },
+  {
     id: "vision-mission",
     title: "Vision & Strategic Mission",
     route: "/vision",
     category: "company",
     keywords: ["vision", "mission", "future", "roadmap", "goals", "strategy"],
     content: `**GK Nexergy Strategic Vision**:
-Building India's premier regional tech innovation hub out of Visakhapatnam, bridging world-class enterprise software delivery with industry-aligned talent acceleration.`,
+Building India's premier tech innovation hub, bridging world-class enterprise software delivery with industry-aligned talent acceleration.`,
   },
 
   // 2. LIVE CONTACT & HQ
@@ -55,12 +67,12 @@ Building India's premier regional tech innovation hub out of Visakhapatnam, brid
     title: "Contact Information & Live Channels",
     route: "/contact",
     category: "contact",
-    keywords: ["contact", "phone", "mobile", "whatsapp", "email", "address", "location", "office", "headquarters", "vizag", "visakhapatnam", "call", "reach"],
+    keywords: ["contact", "phone", "mobile", "whatsapp", "email", "address", "location", "office", "headquarters", "call", "reach"],
     content: `**Live Contact Channels for GK Nexergy**:
 • **Direct Phone**: +91 9704585960
 • **Instant WhatsApp**: https://wa.me/919704585960
 • **Official Email**: contact@gknexergy.com
-• **Headquarters**: Visakhapatnam (Vizag), Andhra Pradesh, India
+• **Headquarters**: Andhra Pradesh, India
 • **Business Hours**: Monday to Saturday: 9:00 AM – 7:00 PM IST
 • **Discovery Consultation**: Free 30-minute session; inquiries answered in 10 minutes.
 • **Google Form**: https://forms.gle/GCqvWiWqxwvDSzoZ6`,
@@ -154,11 +166,11 @@ Key Highlights: ${ind.highlights.join(", ")}`,
   // 7. CAREERS & HIRING
   {
     id: "careers-hiring",
-    title: "Careers & Open Positions in Visakhapatnam",
+    title: "Careers & Open Positions",
     route: "/careers",
     category: "careers",
-    keywords: ["career", "careers", "job", "jobs", "hiring", "openings", "visakhapatnam", "vizag", "salary", "interview", "apply"],
-    content: `**Careers at GK Nexergy** (Visakhapatnam Hub):
+    keywords: ["career", "careers", "job", "jobs", "hiring", "openings", "salary", "interview", "apply"],
+    content: `**Careers at GK Nexergy** (Engineering Pods):
 Active Openings:
 • Full-Stack Developers (React, Next.js, Node.js / Python)
 • AI & Machine Learning Engineers (LLMs, RAG, PyTorch)

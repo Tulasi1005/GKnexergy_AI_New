@@ -11,6 +11,7 @@ import { Reveal } from "../components/Reveal";
 import { SOLUTIONS } from "../data/site";
 import { NavPagesStack } from "../components/NavPagesStack/NavPagesStack";
 import EnterpriseTransformation from "../components/EnterpriseTransformation";
+import PricingPlans from "../components/PricingPlans/PricingPlans";
 
 const HERO_BG_NODES = [
     {
@@ -76,6 +77,17 @@ const FEATURED_HIGHLIGHTS = [
 const Home = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isUserInteracted, setIsUserInteracted] = useState(false);
+
+    useEffect(() => {
+        if (window.location.hash === '#our-ecosystems') {
+            setTimeout(() => {
+                const el = document.getElementById('our-ecosystems');
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+    }, []);
 
     useEffect(() => {
         if (isUserInteracted) {
@@ -148,15 +160,6 @@ const Home = () => {
                     <div className="hero-home-col-text relative z-20 w-full max-w-3xl lg:max-w-[620px] xl:max-w-[680px] 2xl:max-w-[740px] lg:justify-self-start order-1">
                         <div className="hero-text-card lg:mr-auto">
 
-
-                            {/* HERO STATUS BADGE */}
-                            <Reveal delay={0.05}>
-                                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand/10 dark:bg-blue-400/10 border border-brand/20 dark:border-blue-400/20 text-brand dark:text-cyan-400 text-[11px] font-extrabold uppercase tracking-widest mb-4 shadow-sm">
-                                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span>Enterprise &bull; Academy</span>
-                                </div>
-                            </Reveal>
-
                             {/* HERO HEADING */}
                             <Reveal delay={0.1}>
                                 <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[2.85rem] xl:text-[3.35rem] 2xl:text-[3.75rem] font-extrabold leading-[1.15] tracking-tight text-ink dark:text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
@@ -222,7 +225,8 @@ const Home = () => {
 
             {/* TWO ECOSYSTEMS (WITH CLEAN IMAGES & GENEROUS SPACING) */}
             <section
-                className="mx-auto max-w-7xl px-4 pt-8 sm:px-8 sm:py-32"
+                id="our-ecosystems"
+                className="mx-auto max-w-7xl px-4 pt-8 sm:px-8 sm:py-32 scroll-mt-24"
                 data-testid="home-ecosystems"
             >
                 <Reveal>
@@ -399,6 +403,9 @@ const Home = () => {
                 </div>
             </section>
 
+
+            {/* PRICING PLANS SECTION */}
+            <PricingPlans showHeader={true} showComparison={true} showFaqs={true} />
 
             <CTABand />
         </>

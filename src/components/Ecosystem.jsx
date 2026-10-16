@@ -121,8 +121,9 @@ const Ecosystem = ({ activeIndex = 0, onSelectNode }) => {
                             onBlur={() => setHoveredIndex(null)}
                             role="button"
                             tabIndex={0}
-                            aria-label={`Open ${node.label}`}
-                            title={`${node.label}`}
+                            aria-label={node.seoTitle || `Explore ${node.label}`}
+                            title={node.seoTitle || node.label}
+                            data-seo-keyword={node.keywords || node.label}
                         >
                             <motion.div
                                 animate={reduce ? {} : { rotate: -360 }}

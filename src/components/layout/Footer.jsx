@@ -130,10 +130,17 @@ const Footer = ({ theme }) => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="footer-bottom-bar">
+      <div className="footer-bottom-bar flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="footer-copyright">
           © {new Date().getFullYear()} GK Nexergy. All rights reserved.
         </p>
+        <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <Link to="/home" className="hover:text-brand dark:hover:text-white transition-colors">Home</Link>
+          <Link to="/pricing" className="text-brand dark:text-blue-400 font-bold hover:underline transition-colors">Pricing Plans</Link>
+          <Link to="/solutions" className="hover:text-brand dark:hover:text-white transition-colors">Solutions</Link>
+          <Link to="/academy" className="hover:text-brand dark:hover:text-white transition-colors">Academy</Link>
+          <Link to="/contact" className="hover:text-brand dark:hover:text-white transition-colors">Contact</Link>
+        </div>
       </div>
     </div>
   </footer>

@@ -47,9 +47,9 @@ const Why = () => (
                 ))}
             </div>
             <Reveal>
-                <div className="mt-16 rounded-2xl bg-navy p-8 dark:bg-card sm:p-12" data-testid="why-statement">
-                    <Quote className="h-7 w-7 text-electric" strokeWidth={1.5} />
-                    <p className="mt-5 max-w-3xl font-display text-xl font-bold leading-snug text-white sm:text-2xl lg:text-3xl">
+                <div className="mt-16 rounded-2xl bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-50 border border-blue-200/80 p-8 dark:border-slate-800 dark:bg-card sm:p-12" data-testid="why-statement">
+                    <Quote className="h-7 w-7 text-brand dark:text-electric" strokeWidth={1.5} />
+                    <p className="mt-5 max-w-3xl font-display text-xl font-bold leading-snug text-ink dark:text-white sm:text-2xl lg:text-3xl">
                         We don't simply introduce technology. We identify the right technology for the right problem at the right stage of growth.
                     </p>
                 </div>

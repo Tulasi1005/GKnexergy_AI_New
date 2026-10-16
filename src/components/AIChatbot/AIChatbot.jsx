@@ -12,8 +12,22 @@ import {
   Minimize2,
   Key,
   ArrowDown,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX,
+  Sparkles,
 } from "lucide-react";
 import { askGKChatbot } from "../../utils/aiKnowledgeEngine";
+import {
+  SpeechVoiceRecognizer,
+  speakText,
+  stopSpeaking,
+  isSpeechRecognitionSupported,
+  isSpeechSynthesisSupported,
+  detectLanguage,
+  SUPPORTED_VOICE_LANGUAGES,
+} from "../../utils/multilingualVoiceEngine";
 
 // Conversation starter pills
 const STARTER_SUGGESTIONS = [
@@ -85,6 +99,27 @@ export const AIChatbot = ({ theme = "light" }) => {
   const [activeTopic, setActiveTopic] = useState("general");
   const [hasNewMessageBelow, setHasNewMessageBelow] = useState(false);
   const [chipsScrollPercent, setChipsScrollPercent] = useState(0);
+
+  // Voice Assistant States
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speakingMsgId, setSpeakingMsgId] = useState(null);
+  const [voiceEnabled, setVoiceEnabled] = useState(() => {
+    try {
+      const saved = localStorage.getItem("gk_voice_enabled");
+      return saved !== null ? saved === "true" : true;
+    } catch (e) {
+      return true;
+    }
+  });
+  const [selectedVoiceLang, setSelectedVoiceLang] = useState(() => {
+    try {
+      return localStorage.getItem("gk_chat_voice_lang") || "auto";
+    } catch (e) {
+      return "auto";
+    }
+  });
+  const recognizerRef = useRef(null);
 
   const chatFeedRef = useRef(null);
   const inputRef = useRef(null);
@@ -243,6 +278,145 @@ What would you like to know?`;
     isDraggingChipsRef.current = false;
   };
 
+  // Clean markdown for natural text-to-speech
+  const cleanMarkdownForVoice = useCallback((text) => {
+    if (!text) return "";
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/#{1,6}\s+/g, "")
+      .replace(/[-•]\s+/g, "")
+      .replace(/^\d+\.\s+/g, "")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .replace(/https?:\/\/\S+/g, "")
+      .replace(/`{1,3}[^`]*`{1,3}/g, "")
+      .replace(/[\n\r]+/g, " ")
+      .trim();
+  }, []);
+
+  // Voice output / Read aloud toggle for specific message
+  const toggleSpeakMessage = useCallback((msgId, text) => {
+    if (isSpeaking && speakingMsgId === msgId) {
+      stopSpeaking();
+      setIsSpeaking(false);
+      setSpeakingMsgId(null);
+      return;
+    }
+
+    stopSpeaking();
+    if (recognizerRef.current && isListening) {
+      recognizerRef.current.stop();
+      setIsListening(false);
+    }
+
+    const cleanText = cleanMarkdownForVoice(text);
+    if (!cleanText) return;
+
+    // Use explicitly selected language if not auto, otherwise detect automatically
+    const targetLang = selectedVoiceLang && selectedVoiceLang !== "auto"
+      ? selectedVoiceLang
+      : detectLanguage(cleanText);
+
+    setIsSpeaking(true);
+    setSpeakingMsgId(msgId);
+
+    speakText(cleanText, targetLang, {
+      onStart: () => {
+        setIsSpeaking(true);
+        setSpeakingMsgId(msgId);
+      },
+      onEnd: () => {
+        setIsSpeaking(false);
+        setSpeakingMsgId(null);
+      },
+      onError: () => {
+        setIsSpeaking(false);
+        setSpeakingMsgId(null);
+      },
+    });
+  }, [isSpeaking, speakingMsgId, isListening, selectedVoiceLang, cleanMarkdownForVoice]);
+
+  // Voice typing / Speech recognition toggle
+  const toggleVoiceInput = useCallback(() => {
+    if (isListening) {
+      if (recognizerRef.current) {
+        recognizerRef.current.stop();
+      }
+      setIsListening(false);
+      return;
+    }
+
+    // Stop TTS if speaking
+    if (isSpeaking) {
+      stopSpeaking();
+      setIsSpeaking(false);
+      setSpeakingMsgId(null);
+    }
+
+    if (!recognizerRef.current) {
+      recognizerRef.current = new SpeechVoiceRecognizer({
+        onStart: () => {
+          setIsListening(true);
+        },
+        onResult: ({ transcript }) => {
+          if (transcript) {
+            setChatInput(transcript);
+          }
+        },
+        onEnd: () => {
+          setIsListening(false);
+        },
+        onError: (err) => {
+          console.warn("Speech recognition error:", err);
+          setIsListening(false);
+        },
+        selectedLang: selectedVoiceLang,
+      });
+    } else {
+      recognizerRef.current.setLanguage(selectedVoiceLang);
+    }
+
+    recognizerRef.current.start();
+  }, [isListening, isSpeaking, selectedVoiceLang]);
+
+  // Toggle voice auto-read aloud preference
+  const toggleVoiceAutoRead = useCallback(() => {
+    setVoiceEnabled((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("gk_voice_enabled", String(next));
+      } catch (e) {}
+      if (!next && isSpeaking) {
+        stopSpeaking();
+        setIsSpeaking(false);
+        setSpeakingMsgId(null);
+      }
+      return next;
+    });
+  }, [isSpeaking]);
+
+  // Cleanup voice engine on unmount or when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      stopSpeaking();
+      setIsSpeaking(false);
+      setSpeakingMsgId(null);
+      if (recognizerRef.current && isListening) {
+        recognizerRef.current.stop();
+        setIsListening(false);
+      }
+    }
+  }, [isOpen, isListening]);
+
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      if (recognizerRef.current) {
+        recognizerRef.current.stop();
+      }
+    };
+  }, []);
+
   // Keep feed scrolled to latest message
   useEffect(() => {
     if (!isOpen) return;
@@ -265,6 +439,11 @@ What would you like to know?`;
   const handleSend = useCallback(async (customText = null) => {
     const query = (customText !== null ? customText : chatInput).trim();
     if (!query) return;
+
+    if (isListening && recognizerRef.current) {
+      recognizerRef.current.stop();
+      setIsListening(false);
+    }
 
     const userMsg = {
       id: `user-${Date.now()}`,
@@ -305,6 +484,11 @@ What would you like to know?`;
 
       setMessages((prev) => [...prev, botMsg]);
 
+      // Auto-read response if voice enabled
+      if (voiceEnabled) {
+        toggleSpeakMessage(botMsg.id, botMsg.text);
+      }
+
       setTimeout(() => {
         scrollToBottom("smooth");
       }, 50);
@@ -313,13 +497,17 @@ What would you like to know?`;
       const fallbackMsg = {
         id: `bot-${Date.now()}`,
         sender: "bot",
-        text: "I'm here to help! You can ask anything about GK Nexergy software solutions, academy courses, delivered projects, or connect directly with our engineering team in Visakhapatnam.",
+        text: "I'm here to help! You can ask anything about GK Nexergy software solutions, academy courses, delivered projects, or connect directly with our engineering team.",
         routes: [{ label: "Contact Us", to: "/contact" }],
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, fallbackMsg]);
+
+      if (voiceEnabled) {
+        toggleSpeakMessage(fallbackMsg.id, fallbackMsg.text);
+      }
     }
-  }, [chatInput, activeTopic, messages, scrollToBottom]);
+  }, [chatInput, activeTopic, messages, isListening, voiceEnabled, toggleSpeakMessage, scrollToBottom]);
 
   // Key down event
   const handleKeyDown = (e) => {
@@ -484,11 +672,11 @@ What would you like to know?`;
             style={{
               position: "fixed",
               bottom: "74px",
-              right: "24px",
+              right: "16px",
               zIndex: 99999998,
-              width: isExpanded ? "min(640px, calc(100vw - 32px))" : "min(385px, calc(100vw - 32px))",
-              height: isExpanded ? "min(660px, calc(100vh - 96px))" : "min(560px, calc(100vh - 96px))",
-              borderRadius: "18px",
+              width: isExpanded ? "min(640px, calc(100vw - 24px))" : "min(380px, calc(100vw - 24px))",
+              height: isExpanded ? "min(660px, calc(100vh - 90px))" : "min(560px, calc(100vh - 90px))",
+              borderRadius: "16px",
               backgroundColor: isDark ? "#090e18" : "#f0f4f9",
               border: isDark ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid #dbe4f0",
               boxShadow: isDark
@@ -504,29 +692,122 @@ What would you like to know?`;
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                padding: "12px 16px",
+                gap: "8px",
+                padding: "10px 12px",
                 backgroundColor: isDark ? "#0c1322" : "#ffffff",
                 borderBottom: isDark ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid #e5eaf2",
                 flexShrink: 0,
+                minWidth: 0,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <AIAvatarMark size={36} isResponding={isTyping} />
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "14px", fontWeight: 700, color: isDark ? "#ffffff" : "#0f172a", letterSpacing: "-0.01em" }}>
+              {/* Left Title & Status */}
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0, flex: "1 1 auto", overflow: "hidden" }}>
+                <AIAvatarMark size={32} isResponding={isTyping} />
+                <div style={{ display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "5px", minWidth: 0 }}>
+                    <span
+                      style={{
+                        fontSize: "13.5px",
+                        fontWeight: 700,
+                        color: isDark ? "#ffffff" : "#0f172a",
+                        letterSpacing: "-0.01em",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
                       GK Nexergy AI
                     </span>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", color: "#10b981", fontSize: "11.5px", fontWeight: 600 }}>
-                      <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10b981" }} />
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "3px",
+                        color: "#10b981",
+                        fontSize: "11px",
+                        fontWeight: 600,
+                        flexShrink: 0,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <span style={{ width: "5px", height: "5px", borderRadius: "50%", backgroundColor: "#10b981" }} />
                       Online
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Controls */}
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: isDark ? "#94a3b8" : "#64748b" }}>
+              {/* Header Controls */}
+              <div style={{ display: "flex", alignItems: "center", gap: "4px", flexShrink: 0 }}>
+                {/* Voice Auto-Read Toggle */}
+                <button
+                  data-testid="ai-voice-toggle-btn"
+                  onClick={toggleVoiceAutoRead}
+                  title={voiceEnabled ? "Voice output enabled (click to mute auto-read)" : "Voice output muted (click to enable auto-read)"}
+                  aria-label={voiceEnabled ? "Mute voice assistant" : "Unmute voice assistant"}
+                  style={{
+                    background: voiceEnabled ? (isDark ? "rgba(56, 189, 248, 0.15)" : "#e0f2fe") : "transparent",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    color: voiceEnabled ? (isDark ? "#38bdf8" : "#0284c7") : "inherit",
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {voiceEnabled ? (
+                    <Volume2 style={{ width: "15px", height: "15px", strokeWidth: 2 }} className={isSpeaking ? "animate-pulse" : ""} />
+                  ) : (
+                    <VolumeX style={{ width: "15px", height: "15px", strokeWidth: 1.75, opacity: 0.6 }} />
+                  )}
+                </button>
+
+                {/* Compact Language Selector */}
+                <select
+                  value={selectedVoiceLang}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setSelectedVoiceLang(val);
+                    try {
+                      localStorage.setItem("gk_chat_voice_lang", val);
+                    } catch (err) {}
+                    if (recognizerRef.current) {
+                      recognizerRef.current.setLanguage(val);
+                    }
+                  }}
+                  aria-label="Select voice and recognition language"
+                  title="Voice Language (Auto, Telugu, Hindi, English, Tamil, Kannada)"
+                  style={{
+                    maxWidth: "76px",
+                    height: "26px",
+                    background: isDark ? "rgba(255, 255, 255, 0.08)" : "#f1f5f9",
+                    border: isDark ? "1px solid rgba(255, 255, 255, 0.12)" : "1px solid #cbd5e1",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    color: isDark ? "#e2e8f0" : "#0f172a",
+                    padding: "1px 3px",
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    outline: "none",
+                    fontFamily: fontStack,
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {SUPPORTED_VOICE_LANGUAGES.slice(0, 8).map((l) => (
+                    <option
+                      key={l.code}
+                      value={l.code}
+                      style={{ backgroundColor: isDark ? "#0f172a" : "#ffffff", color: isDark ? "#f8fafc" : "#0f172a" }}
+                    >
+                      {l.native}
+                    </option>
+                  ))}
+                </select>
+
                 <button
                   data-testid="ai-clear-btn"
                   onClick={handleClearHistory}
@@ -534,7 +815,7 @@ What would you like to know?`;
                   aria-label="Refresh conversation"
                   style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", padding: "4px", display: "flex", alignItems: "center" }}
                 >
-                  <RotateCcw style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} />
+                  <RotateCcw style={{ width: "15px", height: "15px", strokeWidth: 1.75 }} />
                 </button>
 
                 <button
@@ -544,7 +825,7 @@ What would you like to know?`;
                   style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", padding: "4px", display: "flex", alignItems: "center" }}
                   className="hidden sm:flex"
                 >
-                  {isExpanded ? <Minimize2 style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} /> : <Maximize2 style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} />}
+                  {isExpanded ? <Minimize2 style={{ width: "15px", height: "15px", strokeWidth: 1.75 }} /> : <Maximize2 style={{ width: "15px", height: "15px", strokeWidth: 1.75 }} />}
                 </button>
 
                 <button
@@ -554,7 +835,7 @@ What would you like to know?`;
                   aria-label="Close assistant"
                   style={{ background: "transparent", border: "none", cursor: "pointer", color: "inherit", padding: "4px", display: "flex", alignItems: "center" }}
                 >
-                  <X style={{ width: "16px", height: "16px", strokeWidth: 1.75 }} />
+                  <X style={{ width: "15px", height: "15px", strokeWidth: 1.75 }} />
                 </button>
               </div>
             </div>
@@ -699,18 +980,46 @@ What would you like to know?`;
                         )}
                       </div>
 
-                      {/* Timestamp */}
-                      <span
-                        style={{
-                          fontSize: "11px",
-                          marginTop: "5px",
-                          paddingLeft: "4px",
-                          fontFamily: "'Space Grotesk', monospace",
-                          color: isDark ? "#64748b" : "#94a3b8",
-                        }}
-                      >
-                        {msg.time}
-                      </span>
+                      {/* Timestamp & Message Voice Tools */}
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "5px", paddingLeft: "4px" }}>
+                        <span
+                          style={{
+                            fontSize: "11px",
+                            fontFamily: "'Space Grotesk', monospace",
+                            color: isDark ? "#64748b" : "#94a3b8",
+                          }}
+                        >
+                          {msg.time}
+                        </span>
+
+                        {!isUser && (
+                          <button
+                            type="button"
+                            onClick={() => toggleSpeakMessage(msg.id, msg.text)}
+                            data-testid={`ai-speak-btn-${msg.id}`}
+                            aria-label={isSpeaking && speakingMsgId === msg.id ? "Stop voice playback" : "Listen to response"}
+                            title={isSpeaking && speakingMsgId === msg.id ? "Stop voice playback" : "Listen to response"}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              background: isSpeaking && speakingMsgId === msg.id ? (isDark ? "rgba(56, 189, 248, 0.2)" : "#e0f2fe") : "transparent",
+                              border: "none",
+                              borderRadius: "4px",
+                              cursor: "pointer",
+                              padding: "2px 6px",
+                              fontSize: "11px",
+                              color: isSpeaking && speakingMsgId === msg.id ? (isDark ? "#38bdf8" : "#0284c7") : isDark ? "#64748b" : "#94a3b8",
+                              transition: "all 0.15s ease",
+                            }}
+                          >
+                            <Volume2 style={{ width: "13px", height: "13px" }} className={isSpeaking && speakingMsgId === msg.id ? "animate-pulse text-sky-500" : ""} />
+                            <span style={{ fontWeight: isSpeaking && speakingMsgId === msg.id ? 700 : 500 }}>
+                              {isSpeaking && speakingMsgId === msg.id ? "Speaking..." : "Listen"}
+                            </span>
+                          </button>
+                        )}
+                      </div>
                     </motion.div>
                   );
                 })}
@@ -915,7 +1224,7 @@ What would you like to know?`;
             {/* --- INPUT BAR --- */}
             <div
               style={{
-                padding: "10px 12px 14px 12px",
+                padding: "8px 10px 12px 10px",
                 backgroundColor: isDark ? "#090e18" : "#f0f4f9",
                 flexShrink: 0,
               }}
@@ -925,19 +1234,65 @@ What would you like to know?`;
                   e.preventDefault();
                   handleSend();
                 }}
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                style={{ display: "flex", alignItems: "center", gap: "6px" }}
               >
+                {/* Voice Input Microphone Button */}
+                <button
+                  type="button"
+                  onClick={toggleVoiceInput}
+                  data-testid="ai-mic-btn"
+                  aria-label={isListening ? "Stop voice recording" : "Voice typing"}
+                  title={isListening ? "Listening... click to stop" : "Voice typing (speak in English, Telugu, Hindi, etc.)"}
+                  style={{
+                    width: "38px",
+                    height: "38px",
+                    borderRadius: "10px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                    cursor: "pointer",
+                    backgroundColor: isListening
+                      ? "#ef4444"
+                      : isDark
+                        ? "#111a2e"
+                        : "#ffffff",
+                    borderColor: isListening
+                      ? "#ef4444"
+                      : isDark
+                        ? "rgba(255,255,255,0.1)"
+                        : "#bae6fd",
+                    borderWidth: "1.5px",
+                    borderStyle: "solid",
+                    color: isListening ? "#ffffff" : isDark ? "#93c5fd" : "#0284c7",
+                    boxShadow: isListening ? "0 0 14px rgba(239, 68, 68, 0.6)" : "none",
+                    transition: "all 0.15s ease",
+                  }}
+                  className={isListening ? "animate-pulse" : ""}
+                >
+                  {isListening ? (
+                    <MicOff style={{ width: "16px", height: "16px" }} />
+                  ) : (
+                    <Mic style={{ width: "16px", height: "16px" }} />
+                  )}
+                </button>
+
                 {/* Main Text Input Field with light sky blue border */}
                 <div
                   style={{
                     flex: 1,
                     display: "flex",
                     alignItems: "center",
-                    borderRadius: "12px",
-                    padding: "9px 14px",
+                    borderRadius: "10px",
+                    padding: "7px 12px",
                     backgroundColor: isDark ? "#111a2e" : "#ffffff",
-                    border: isDark ? "2px solid rgba(96, 165, 250, 0.4)" : "2px solid #bae6fd",
+                    border: isListening
+                      ? "2px solid #ef4444"
+                      : isDark
+                        ? "2px solid rgba(96, 165, 250, 0.4)"
+                        : "2px solid #bae6fd",
                     transition: "border-color 0.2s ease",
+                    minWidth: 0,
                   }}
                 >
                   <input
@@ -946,7 +1301,7 @@ What would you like to know?`;
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Ask GK Nexergy anything..."
+                    placeholder={isListening ? "Listening... speak now" : "Ask GK Nexergy anything..."}
                     data-testid="ai-chat-input"
                     style={{
                       width: "100%",
@@ -967,9 +1322,9 @@ What would you like to know?`;
                   data-testid="ai-send-btn"
                   aria-label="Send message"
                   style={{
-                    width: "42px",
-                    height: "42px",
-                    borderRadius: "12px",
+                    width: "38px",
+                    height: "38px",
+                    borderRadius: "10px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -983,7 +1338,7 @@ What would you like to know?`;
                     transition: "all 0.15s ease",
                   }}
                 >
-                  <Send style={{ width: "16px", height: "16px" }} />
+                  <Send style={{ width: "15px", height: "15px" }} />
                 </button>
               </form>
             </div>

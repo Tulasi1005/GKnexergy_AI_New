@@ -82,7 +82,7 @@ export const CardStack = () => {
       title: 'Enterprise Partner',
       tagline: 'Technology that moves business forward.',
       bullets: [
-        'Visakhapatnam engineering center of excellence',
+        'Premier engineering center of excellence',
         'Dedicated practicing engineering pods',
         '100% intellectual property ownership',
         'Measurable business outcomes & ROI',

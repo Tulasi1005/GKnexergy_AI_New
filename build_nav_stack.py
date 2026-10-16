@@ -24,7 +24,7 @@ export const NavPagesStack = () => {
       bullets: [
         'End-to-end enterprise digital transformation',
         'AI workflow automation & custom LLM systems',
-        'Visakhapatnam agile pods & engineering excellence',
+        'Autonomous agile pods & engineering excellence',
         'Unified enterprise technology & workforce ecosystem',
       ],
       image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop',
@@ -39,7 +39,7 @@ export const NavPagesStack = () => {
       tagline: 'Technology built to move your enterprise forward.',
       badge: 'ABOUT US',
       bullets: [
-        'Visakhapatnam engineering center of excellence',
+        'Premier engineering center of excellence',
         'Dedicated practicing engineering delivery pods',
         '100% intellectual property & data ownership',
         'Executive technology advisory & modernization',
@@ -107,7 +107,7 @@ export const NavPagesStack = () => {
       tagline: "Build what's next with GK Nexergy engineering.",
       badge: 'JOIN TEAM',
       bullets: [
-        'Autonomous agile pods in Visakhapatnam',
+        'Autonomous agile pods with rapid sprints',
         'Modern stack: React, Node.js, Python, Postgres & AI',
         'Direct ownership of real-world client solutions',
         'Accelerated career progression & continuous learning',
@@ -127,7 +127,7 @@ export const NavPagesStack = () => {
         '30-minute architectural discovery session',
         'Rapid feasibility scope & technology blueprint',
         'Direct WhatsApp, telephone & email consultation',
-        'Visakhapatnam, Andhra Pradesh, India',
+        'Andhra Pradesh, India',
       ],
       image: 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?q=80&w=1200&auto=format&fit=crop',
     },

@@ -32,7 +32,7 @@ import { SUPPORTED_LANGUAGES, setGlobalPageLanguage, getInitialLanguage } from '
 
 // COMPLETE KNOWLEDGE BASE FOR REAL-TIME AI ASSISTANT
 const GK_KNOWLEDGE_BASE = `
-GK Nexergy is an enterprise technology and workforce empowerment company headquartered in Visakhapatnam, Andhra Pradesh, India.
+GK Nexergy is an enterprise technology and workforce empowerment company headquartered in Andhra Pradesh, India.
 Tagline: Train. Build. Transform.
 One Company. Two Powerful Ecosystems:
 
@@ -57,13 +57,13 @@ One Company. Two Powerful Ecosystems:
 - NutriBest Health & Wellness Global E-Commerce: High-throughput e-commerce, international checkout, subscriptions.
 
 4. COMPANY & STRATEGY (/company & /about):
-- Visakhapatnam Engineering Center of Excellence.
+- Premier Engineering Center of Excellence.
 - Dedicated practicing engineering delivery pods.
 - 100% intellectual property & data ownership for clients.
 - Executive technology advisory & modernization.
 
 5. HIRING & CAREERS (/careers):
-- Autonomous agile pods in Visakhapatnam.
+- Autonomous agile pods with rapid sprint cycles.
 - Tech Stack: React, Node.js, Python, PostgreSQL, Framer Motion, AI/ML, Cloud DevOps.
 - Accelerated career progression with direct product ownership.
 
@@ -77,6 +77,16 @@ export const NavPagesStack = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const scrollTabsRef = useRef(null);
+
+  // Theme Detection (Dark vs Light)
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   // AI Modal States
   const [chatOpen, setChatOpen] = useState(false);
@@ -120,64 +130,64 @@ export const NavPagesStack = () => {
       badge: 'ABOUT US',
       highlightOutcome: '100% Client IP Ownership',
       bullets: [
-        'Visakhapatnam Engineering Center of Excellence',
+        'Premier Engineering Center of Excellence',
         'Dedicated Agile practicing engineering pods',
-        'Complete intellectual property and code ownership',
+        'Full proprietary code control and architectural security',
         'Executive technology roadmap & modern architecture',
       ],
       image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop',
+    },
+    {
+      id: 'ecosystem',
+      to: '#our-ecosystems',
+      tabLabel: 'Ecosystem',
+      icon: Globe2,
+      category: 'DUAL SYNERGY',
+      title: 'Connected Ecosystem',
+      tagline: 'Train. Build. Transform. Uniting enterprise engineering and workforce empowerment.',
+      badge: 'OUR MODEL',
+      highlightOutcome: 'Direct Talent Alignment',
+      bullets: [
+        'Integrated enterprise software & client delivery pods',
+        'Nexergy Academy industry training & apprenticeship model',
+        'Direct alignment with live client solution roadmaps',
+        'Holistic digital transformation and workforce enablement',
+      ],
+      image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop',
     },
     {
       id: 'solutions',
       to: '/solutions',
       tabLabel: 'Solutions',
       icon: Code2,
-      category: 'ENTERPRISE ENGINEERING',
+      category: 'CUSTOM ARCHITECTURE',
       title: 'Enterprise Solutions',
       tagline: 'High-performance web apps, mobile apps, and cloud platforms.',
-      badge: 'SOLUTIONS',
-      highlightOutcome: 'Scalable Cloud Architecture',
+      badge: 'SERVICES',
+      highlightOutcome: 'Scalable Cloud Infrastructure',
       bullets: [
-        'Custom web applications & scalable cloud services',
-        'Cross-platform iOS & Android mobile apps',
-        'Intelligent automation & AI document copilots',
-        'PostgreSQL database tuning & data engineering',
+        'Custom web applications & modern microservices',
+        'Cross-platform iOS & Android mobile systems',
+        'Intelligent automation & AI smart assistants',
+        'High-performance database & data engineering',
       ],
       image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop',
-    },
-    {
-      id: 'academy',
-      to: '/academy',
-      tabLabel: 'Academy',
-      icon: GraduationCap,
-      category: 'NEXERGY ACADEMY',
-      title: 'Nexergy Academy',
-      tagline: 'Practical IT education with real repo apprenticeships & mentors.',
-      badge: 'ACADEMY',
-      highlightOutcome: 'Industry-Ready Workforce',
-      bullets: [
-        '16-Week Cyber Security & Ethical Hacking Program',
-        'PostgreSQL Database Mastery & Performance Tuning',
-        'Full-Stack Web & Applied AI Tools Foundation',
-        'Mentored hands-on labs with production repositories',
-      ],
-      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop',
     },
     {
       id: 'projects',
       to: '/projects',
       tabLabel: 'Projects',
       icon: FolderGit2,
-      category: 'CLIENT SUCCESS',
+      category: 'PROVEN CASE STUDIES',
       title: 'Delivered Projects',
       tagline: 'Production-tested digital systems driving compounding scale.',
       badge: 'PORTFOLIO',
-      highlightOutcome: 'Proven Enterprise ROI',
+      highlightOutcome: 'Demonstrated Enterprise Value',
       bullets: [
         'AI-Powered Hospital Management & Triage Platform',
         'Real Estate Lead Intelligence & Analytics Engine',
         'NutriBest Global E-Commerce & Checkout Suite',
-        'High-throughput SaaS portals & ERP integrations',
+        'High-throughput business portals & system integrations',
       ],
       image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop',
     },
@@ -186,34 +196,52 @@ export const NavPagesStack = () => {
       to: '/careers',
       tabLabel: 'Hiring',
       icon: Users,
-      category: 'CAREERS & TALENT',
+      category: 'TALENT ACCELERATION',
       title: 'Careers & Hiring',
-      tagline: 'Join high-impact engineering delivery pods in Visakhapatnam.',
-      badge: 'CAREERS',
-      highlightOutcome: 'Active Hiring Pods',
+      tagline: 'Join high-impact engineering delivery pods with rapid career progression.',
+      badge: 'JOIN US',
+      highlightOutcome: 'Active Sprint Pods',
       bullets: [
-        'Autonomous engineering roles in Visakhapatnam Hub',
-        'Core Stack: React, Node.js, Python, PostgreSQL & AI',
+        'Autonomous engineering roles in modern tech stacks',
+        'Modern Web, Cloud & AI Engineering Stack',
         'End-to-end feature ownership on live client solutions',
         'Competitive compensation with fast-track leadership',
       ],
       image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop',
     },
     {
+      id: 'academy',
+      to: '/academy',
+      tabLabel: 'Academy',
+      icon: GraduationCap,
+      category: 'INDUSTRY EDUCATION',
+      title: 'Nexergy Academy',
+      tagline: 'Practical IT education with real repo apprenticeships & mentors.',
+      badge: 'PROGRAMS',
+      highlightOutcome: 'Production-Ready Engineers',
+      bullets: [
+        '16-Week Cyber Security & Ethical Hacking Program',
+        'Enterprise Database Architecture & Performance',
+        'Full-Stack Web & Applied AI Tools Foundation',
+        'Mentored hands-on labs with production repositories',
+      ],
+      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop',
+    },
+    {
       id: 'contact',
       to: '/contact',
       tabLabel: 'Contact',
       icon: PhoneCall,
-      category: 'GET IN TOUCH',
+      category: 'CONSULTATION & DISCOVERY',
       title: 'Contact & Connect',
       tagline: 'Consult with our engineering team for roadmap & feasibility.',
-      badge: 'CONTACT',
-      highlightOutcome: 'Free 30-Min Consultation',
+      badge: 'REACH OUT',
+      highlightOutcome: 'Zero-Obligation Architecture Call',
       bullets: [
-        'Complimentary 30-minute architectural consultation',
-        'Rapid feasibility blueprint & transparent estimation',
+        'Complimentary 30-minute feasibility blueprint',
+        'Rapid scope definition & transparent estimation',
         'Direct telephone, WhatsApp & email access',
-        'Visakhapatnam Engineering Hub, AP, India',
+        'Premier Engineering Hub, AP, India',
       ],
       image: 'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?q=80&w=1200&auto=format&fit=crop',
     },
@@ -241,6 +269,16 @@ export const NavPagesStack = () => {
         window.dispatchEvent(new CustomEvent('open-gk-chatbot'));
       } else if (card.aiAction === 'translate') {
         setTranslateOpen(true);
+      }
+    } else if (card.id === 'ecosystem' || card.to === '#our-ecosystems' || card.to === '/home#our-ecosystems') {
+      const el = document.getElementById('our-ecosystems') || document.querySelector('[data-testid="home-ecosystems"]');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, '', '#our-ecosystems');
+        }
+      } else {
+        navigate('/home#our-ecosystems');
       }
     } else if (card.to) {
       navigate(card.to);
@@ -330,14 +368,21 @@ export const NavPagesStack = () => {
       }
     }
 
-    // If User provided OpenAI API Key, call OpenAI API in Real Time
-    if (openAiKey && openAiKey.startsWith('sk-')) {
+    // =========================================================================
+    // OPTIONAL: OpenAI Real-Time API Integration (Configured via .env)
+    // =========================================================================
+    // Reads key from import.meta.env.VITE_OPENAI_API_KEY or user-entered key.
+    // Uncomment this block to enable direct OpenAI GPT-4o-mini API calls.
+    // -------------------------------------------------------------------------
+    /*
+    const activeApiKey = openAiKey || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_OPENAI_API_KEY) || '';
+    if (activeApiKey && activeApiKey.startsWith('sk-')) {
       try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${openAiKey}`,
+            Authorization: `Bearer ${activeApiKey}`,
           },
           body: JSON.stringify({
             model: 'gpt-4o-mini',
@@ -389,6 +434,7 @@ export const NavPagesStack = () => {
         console.warn('OpenAI call fallback:', err);
       }
     }
+    */
 
     // Default High-Accuracy Smart RAG Knowledge Engine
     setTimeout(() => {
@@ -431,20 +477,20 @@ export const NavPagesStack = () => {
           { label: 'View Delivered Projects', to: '/projects', primary: true },
           { label: 'Explore Solutions', to: '/solutions' },
         ];
-      } else if (query.includes('job') || query.includes('career') || query.includes('hiring') || query.includes('apply') || query.includes('vizag')) {
-        botReply = 'We are hiring for autonomous agile pods in Visakhapatnam! We welcome developers skilled in React, Node.js, Python, PostgreSQL, and AI engineering.';
+      } else if (query.includes('job') || query.includes('career') || query.includes('hiring') || query.includes('apply')) {
+        botReply = 'We are hiring for autonomous agile pods! We welcome developers skilled in React, Node.js, Python, PostgreSQL, and AI engineering.';
         actions = [
           { label: 'Careers & Open Roles', to: '/careers', primary: true },
           { label: 'About Our Team', to: '/about' },
         ];
       } else if (query.includes('contact') || query.includes('quote') || query.includes('consult') || query.includes('call') || query.includes('email') || query.includes('price')) {
-        botReply = 'You can book a complimentary 30-minute architectural discovery session. Our engineering leads in Visakhapatnam will review your project scope within 24 hours.';
+        botReply = 'You can book a complimentary 30-minute architectural discovery session. Our engineering leads will review your project scope within 24 hours.';
         actions = [
           { label: 'Book Discovery Session', to: '/contact', primary: true },
           { label: 'Inquiry Form', to: 'https://forms.gle/GCqvWiWqxwvDSzoZ6', external: true },
         ];
       } else if (query.includes('company') || query.includes('about') || query.includes('vision') || query.includes('who are you')) {
-        botReply = 'GK Nexergy is an enterprise technology engineering and workforce transformation partner. We operate engineering centers in Visakhapatnam ensuring 100% IP ownership and agile pod delivery.';
+        botReply = 'GK Nexergy is an enterprise technology engineering and workforce transformation partner. We operate premier engineering centers ensuring 100% IP ownership and agile pod delivery.';
         actions = [
           { label: 'Company & Vision', to: '/about', primary: true },
           { label: 'Why GK Nexergy', to: '/why-gk-nexergy' },
@@ -476,7 +522,7 @@ export const NavPagesStack = () => {
     'Take me to Nexergy Academy',
     'What software do you build?',
     'Tell me about Cyber Security course',
-    'How do I apply for a job in Vizag?',
+    'How do I apply for engineering roles?',
     'Book an AI consultation call',
   ];
 
@@ -571,27 +617,19 @@ export const NavPagesStack = () => {
       <div className="nav-stack-container">
         {/* Centered Header */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', maxWidth: '780px', margin: '0 auto 2.5rem auto' }}>
-          {/* Eyebrow Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/25 mb-4 shadow-sm shadow-blue-500/10" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.375rem 0.875rem', borderRadius: '9999px', backgroundColor: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', marginBottom: '1rem' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#60A5FA' }} className="animate-pulse" />
-            <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: '0.75rem', fontWeight: 700, color: '#93C5FD', letterSpacing: '0.16em', textTransform: 'uppercase' }}>
-              GK NEXERGY ECOSYSTEM
-            </span>
-          </div>
-
           {/* Section Heading */}
           <h2
-            style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(1.75rem, 3.5vw, 2.85rem)', fontWeight: 800, color: '#ffffff', lineHeight: 1.15, letterSpacing: '-0.025em', marginBottom: '0.85rem' }}
+            style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(1.75rem, 3.5vw, 2.85rem)', fontWeight: 800, color: isDark ? '#ffffff' : '#0F172A', lineHeight: 1.15, letterSpacing: '-0.025em', marginBottom: '0.85rem' }}
           >
             Capabilities{' '}
-            <span style={{ background: 'linear-gradient(to right, #60A5FA, #38BDF8, #818CF8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <span className="nav-stack-heading-gradient">
               & Core Offerings
             </span>
           </h2>
 
           {/* Subtitle */}
           <p
-            style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.95rem', color: '#CBD5E1', lineHeight: 1.6, maxWidth: 620 }}
+            style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.95rem', color: isDark ? '#CBD5E1' : '#475569', lineHeight: 1.6, maxWidth: 620 }}
           >
             Explore our end-to-end capabilities across custom engineering, industry training, client case studies, and career opportunities.
           </p>
@@ -617,8 +655,12 @@ export const NavPagesStack = () => {
                     <button
                       key={p.id}
                       onClick={() => {
-                        setActiveIndex(idx);
-                        setHoveredIndex(idx);
+                        if (p.id === 'ecosystem' && isCurrent) {
+                          handleCardClick(p);
+                        } else {
+                          setActiveIndex(idx);
+                          setHoveredIndex(idx);
+                        }
                       }}
                       style={{
                         display: 'flex',
@@ -630,16 +672,16 @@ export const NavPagesStack = () => {
                         fontWeight: 700,
                         whiteSpace: 'nowrap',
                         cursor: 'pointer',
-                        border: isCurrent ? '1px solid #60A5FA' : '1px solid rgba(255,255,255,0.08)',
-                        backgroundColor: isCurrent ? '#2563EB' : 'rgba(255,255,255,0.04)',
-                        color: isCurrent ? '#ffffff' : '#CBD5E1',
-                        boxShadow: isCurrent ? '0 4px 15px rgba(37,99,235,0.4)' : 'none',
+                        border: isCurrent ? '1px solid #2563EB' : isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0',
+                        backgroundColor: isCurrent ? '#2563EB' : isDark ? 'rgba(255,255,255,0.04)' : '#ffffff',
+                        color: isCurrent ? '#ffffff' : isDark ? '#CBD5E1' : '#475569',
+                        boxShadow: isCurrent ? '0 4px 15px rgba(37,99,235,0.4)' : isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.05)',
                         flexShrink: 0
                       }}
                     >
                       <IconComp style={{ width: 14, height: 14 }} />
                       <span>{p.tabLabel}</span>
-                      <span style={{ fontSize: '0.625rem', fontFamily: 'monospace', marginLeft: 2, padding: '0.1rem 0.25rem', borderRadius: 4, backgroundColor: isCurrent ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.1)', color: isCurrent ? '#ffffff' : '#94A3B8' }}>
+                      <span style={{ fontSize: '0.625rem', fontFamily: 'monospace', marginLeft: 2, padding: '0.1rem 0.25rem', borderRadius: 4, backgroundColor: isCurrent ? 'rgba(0,0,0,0.3)' : isDark ? 'rgba(255,255,255,0.1)' : '#F1F5F9', color: isCurrent ? '#ffffff' : isDark ? '#94A3B8' : '#64748B' }}>
                         0{idx + 1}
                       </span>
                     </button>
@@ -649,20 +691,20 @@ export const NavPagesStack = () => {
 
               {/* Mobile Deck Header / Arrow Controls */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 0.5rem', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#94A3B8' }}>
-                  <strong style={{ color: '#ffffff' }}>0{currentIndex + 1}</strong> / 0{total} &mdash; {currentCard.badge}
+                <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: isDark ? '#94A3B8' : '#64748B' }}>
+                  <strong style={{ color: isDark ? '#ffffff' : '#0F172A' }}>0{currentIndex + 1}</strong> / 0{total} &mdash; {currentCard.badge}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                   <button
                     onClick={handlePrev}
-                    style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                    style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)', color: isDark ? '#ffffff' : '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                     aria-label="Previous page"
                   >
                     <ChevronLeft style={{ width: 16, height: 16 }} />
                   </button>
                   <button
                     onClick={handleNext}
-                    style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                    style={{ width: 32, height: 32, borderRadius: '50%', backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)', color: isDark ? '#ffffff' : '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                     aria-label="Next page"
                   >
                     <ChevronRight style={{ width: 16, height: 16 }} />
@@ -673,63 +715,72 @@ export const NavPagesStack = () => {
               {/* Mobile Active Card */}
               <div
                 onClick={() => handleCardClick(currentCard)}
-                style={{ width: '100%', borderRadius: '1rem', backgroundColor: '#0B1528', border: '2px solid rgba(59,130,246,0.8)', padding: '1.25rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 20px 40px rgba(0,0,0,0.8)', cursor: 'pointer' }}
+                style={{ width: '100%', borderRadius: '1.25rem', backgroundColor: isDark ? '#0B1528' : '#ffffff', border: isDark ? '2px solid rgba(59,130,246,0.8)' : '2px solid rgba(37,99,235,0.5)', padding: '1.4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: isDark ? '0 20px 40px rgba(0,0,0,0.8)' : '0 12px 30px rgba(15,23,42,0.1)', cursor: 'pointer' }}
                 role="button"
                 tabIndex={0}
               >
                 <div>
                   {/* Visual Banner */}
-                  <div style={{ position: 'relative', width: '100%', height: 145, borderRadius: '0.75rem', overflow: 'hidden', marginBottom: '0.875rem', flexShrink: 0, backgroundColor: '#0F172A', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <div style={{ position: 'relative', width: '100%', height: 165, borderRadius: '0.85rem', overflow: 'hidden', marginBottom: '1rem', flexShrink: 0, backgroundColor: isDark ? '#0F172A' : '#F1F5F9', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0' }}>
                     <img
                       src={currentCard.image}
                       alt={currentCard.title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       loading="lazy"
                     />
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0B1528 0%, rgba(11,21,40,0.3) 50%, rgba(0,0,0,0.6) 100%)' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: isDark ? 'linear-gradient(to top, #0B1528 0%, rgba(11,21,40,0.3) 50%, rgba(0,0,0,0.6) 100%)' : 'linear-gradient(to top, rgba(15,23,42,0.8) 0%, rgba(15,23,42,0.2) 50%, rgba(0,0,0,0.4) 100%)' }} />
 
-                    {/* Badges - GK Monogram from whiteboard drawing */}
+                    {/* Badges - GK Logo from chatbot */}
                     <div style={{ position: 'absolute', top: 10, left: 10, right: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                        <div style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: '#2563EB', color: '#ffffff', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, border: '1px solid rgba(96,165,250,0.5)' }}>
-                          GK
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <div
+                          style={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: '50%',
+                            backgroundColor: '#ffffff',
+                            border: '1px solid rgba(255,255,255,0.8)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            overflow: 'hidden',
+                            flexShrink: 0,
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                          }}
+                        >
+                          <img
+                            src="/images/gk-avatar-badge.png"
+                            alt="GK Logo"
+                            style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '1.5px' }}
+                          />
                         </div>
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', padding: '0.15rem 0.5rem', borderRadius: 4, border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', padding: '0.2rem 0.5rem', borderRadius: 4, border: '1px solid rgba(255,255,255,0.1)' }}>
                           {currentCard.category}
                         </span>
                       </div>
-                      <span style={{ fontSize: 10, fontFamily: 'monospace', fontWeight: 700, color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.6)', padding: '0.15rem 0.5rem', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <span style={{ fontSize: 10, fontFamily: 'monospace', fontWeight: 700, color: '#ffffff', backgroundColor: 'rgba(0,0,0,0.65)', padding: '0.2rem 0.5rem', borderRadius: 9999, border: '1px solid rgba(255,255,255,0.1)' }}>
                         0{currentIndex + 1} / 0{total}
-                      </span>
-                    </div>
-
-                    <div style={{ position: 'absolute', bottom: 8, left: 12, right: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
-                      <span style={{ fontSize: 9, fontFamily: 'monospace', textTransform: 'uppercase', color: '#CBD5E1', fontWeight: 600 }}>
-                        {currentCard.category}
-                      </span>
-                      <span style={{ fontSize: 10, color: '#93C5FD', display: 'flex', alignItems: 'center', gap: 2, fontWeight: 600 }}>
-                        {currentCard.highlightOutcome} <ArrowUpRight style={{ width: 12, height: 12 }} />
                       </span>
                     </div>
                   </div>
 
                   {/* Title & Tagline */}
                   <h3
-                    style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem', lineHeight: 1.25 }}
+                    style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.15rem', fontWeight: 700, color: isDark ? '#ffffff' : '#0F172A', marginBottom: '0.25rem', lineHeight: 1.25 }}
                   >
                     {currentCard.title}
                   </h3>
                   <p
-                    style={{ fontFamily: "'Inter', sans-serif", color: '#CBD5E1', fontSize: '0.75rem', fontWeight: 500, marginBottom: '0.75rem', lineHeight: 1.4 }}
+                    style={{ fontFamily: "'Inter', sans-serif", color: isDark ? '#CBD5E1' : '#475569', fontSize: '0.75rem', fontWeight: 500, marginBottom: '0.75rem', lineHeight: 1.4 }}
                   >
                     {currentCard.tagline}
                   </p>
 
                   {/* Bullets */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', marginBottom: '0.75rem', backgroundColor: 'rgba(0,0,0,0.3)', padding: '0.625rem', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', marginBottom: '0.75rem', backgroundColor: isDark ? 'rgba(0,0,0,0.3)' : '#F8FAFC', padding: '0.625rem', borderRadius: '0.75rem', border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #E2E8F0' }}>
                     {currentCard.bullets.map((b, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: '#E2E8F0' }}>
-                        <div style={{ width: 14, height: 14, borderRadius: '50%', backgroundColor: 'rgba(37,99,235,0.2)', color: '#60A5FA', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: isDark ? '#E2E8F0' : '#334155' }}>
+                        <div style={{ width: 14, height: 14, borderRadius: '50%', backgroundColor: 'rgba(37,99,235,0.15)', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                           <Check style={{ width: 9, height: 9 }} />
                         </div>
                         <span style={{ fontSize: '0.7rem', lineHeight: 1.35 }}>{b}</span>
@@ -739,12 +790,12 @@ export const NavPagesStack = () => {
                 </div>
 
                 {/* Mobile Bottom Info Strip */}
-                <div style={{ marginTop: '0.5rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-                  <span style={{ fontWeight: 600, color: '#94A3B8', fontSize: '0.75rem' }}>
+                <div style={{ marginTop: '0.5rem', paddingTop: '0.65rem', borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem' }}>
+                  <span style={{ fontWeight: 600, color: isDark ? '#94A3B8' : '#64748B', fontSize: '0.75rem' }}>
                     {currentCard.highlightOutcome}
                   </span>
-                  <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    {currentCard.badge}
+                  <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                    {currentCard.badge} <ArrowUpRight style={{ width: 11, height: 11 }} />
                   </span>
                 </div>
               </div>
@@ -765,7 +816,7 @@ export const NavPagesStack = () => {
                       cursor: 'pointer',
                       transition: 'all 0.3s',
                       width: currentIndex === i ? 24 : 6,
-                      backgroundColor: currentIndex === i ? '#3B82F6' : 'rgba(255,255,255,0.2)'
+                      backgroundColor: currentIndex === i ? '#2563EB' : isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'
                     }}
                     aria-label={`Jump to ${c.title}`}
                   />
@@ -782,15 +833,15 @@ export const NavPagesStack = () => {
               onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Top Header & Deck Controls */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0' }}>
                 <div>
                   <span
-                    style={{ fontFamily: "'Outfit', sans-serif", fontSize: '11px', letterSpacing: '0.2em', color: '#60A5FA', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}
+                    style={{ fontFamily: "'Outfit', sans-serif", fontSize: '11px', letterSpacing: '0.2em', color: '#2563EB', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}
                   >
                     GK NEXERGY ECOSYSTEM
                   </span>
                   <span
-                    style={{ fontFamily: "'Space Grotesk', monospace", fontSize: '12px', color: '#94A3B8' }}
+                    style={{ fontFamily: "'Space Grotesk', monospace", fontSize: '12px', color: isDark ? '#94A3B8' : '#64748B' }}
                   >
                     Select or hover tabs to inspect each engineering domain
                   </span>
@@ -799,21 +850,21 @@ export const NavPagesStack = () => {
                 {/* Counter & Controls */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <span
-                    style={{ fontFamily: "'Space Grotesk', monospace", fontSize: '12px', color: '#94A3B8' }}
+                    style={{ fontFamily: "'Space Grotesk', monospace", fontSize: '12px', color: isDark ? '#94A3B8' : '#64748B' }}
                   >
-                    <strong style={{ color: '#ffffff', fontSize: '14px' }}>0{currentIndex + 1}</strong> / 0{total}
+                    <strong style={{ color: isDark ? '#ffffff' : '#0F172A', fontSize: '14px' }}>0{currentIndex + 1}</strong> / 0{total}
                   </span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                     <button
                       onClick={handlePrev}
-                      style={{ width: 36, height: 36, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                      style={{ width: 36, height: 36, borderRadius: '50%', backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)', border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(0,0,0,0.12)', color: isDark ? '#E2E8F0' : '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
                       aria-label="Previous card"
                     >
                       <ChevronLeft style={{ width: 16, height: 16 }} />
                     </button>
                     <button
                       onClick={handleNext}
-                      style={{ width: 36, height: 36, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                      style={{ width: 36, height: 36, borderRadius: '50%', backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)', border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(0,0,0,0.12)', color: isDark ? '#E2E8F0' : '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
                       aria-label="Next card"
                     >
                       <ChevronRight style={{ width: 16, height: 16 }} />
@@ -827,10 +878,9 @@ export const NavPagesStack = () => {
                 
                 {/* 1. BACKGROUND FANNED CARDS (Slots 1..N stepped to the right) */}
                 {pagesData.slice(1).map((card, offsetIdx) => {
-                  const cardIdx = offsetIdx + 1; // 1 to 5
+                  const cardIdx = offsetIdx + 1;
                   const isSelected = currentIndex === cardIdx;
-
-                  const xOffset = cardIdx * 48; // 48px right step per card
+                  const xOffset = cardIdx * 52; // 52px right step per card
                   const yOffset = isSelected ? -14 : cardIdx * -3;
                   const zIndex = 25 - cardIdx;
 
@@ -850,41 +900,59 @@ export const NavPagesStack = () => {
                         <img
                           src={card.image}
                           alt={card.title}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: isSelected ? 0.4 : 0.2, transition: 'all 0.5s' }}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: isSelected ? (isDark ? 0.4 : 0.3) : (isDark ? 0.2 : 0.15), transition: 'all 0.5s' }}
                           loading="lazy"
                         />
-                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0B1528 0%, rgba(9,17,34,0.85) 60%, rgba(9,17,34,0.7) 100%)' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: isDark ? 'linear-gradient(to top, #0B1528 0%, rgba(9,17,34,0.85) 60%, rgba(9,17,34,0.7) 100%)' : 'linear-gradient(to top, rgba(248,250,252,0.95) 0%, rgba(248,250,252,0.85) 60%, rgba(248,250,252,0.7) 100%)' }} />
                       </div>
 
                       {/* Background Card Peek Content (visible in the space when hovered) */}
-                      <div style={{ position: 'relative', zIndex: 10, height: '100%', padding: '1.5rem', paddingRight: '4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', pointerEvents: 'none' }}>
+                      <div style={{ position: 'relative', zIndex: 10, height: '100%', padding: '1.5rem', paddingRight: '4.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', pointerEvents: 'none' }}>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.65rem' }}>
-                            <div style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: '#2563EB', color: '#ffffff', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 }}>
-                              GK
+                            <div
+                              style={{
+                                width: 28,
+                                height: 28,
+                                borderRadius: '50%',
+                                backgroundColor: '#ffffff',
+                                border: '1px solid rgba(255,255,255,0.8)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                              }}
+                            >
+                              <img
+                                src="/images/gk-avatar-badge.png"
+                                alt="GK Logo"
+                                style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '1.5px' }}
+                              />
                             </div>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', padding: '0.2rem 0.6rem', borderRadius: 6, border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: isDark ? '#93C5FD' : '#2563EB', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: isDark ? 'rgba(0,0,0,0.6)' : '#E0E7FF', backdropFilter: 'blur(8px)', padding: '0.2rem 0.6rem', borderRadius: 6, border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(37,99,235,0.2)' }}>
                               {card.category}
                             </span>
                           </div>
-                          <h4 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.35rem' }}>
+                          <h4 style={{ fontSize: '1.25rem', fontWeight: 700, color: isDark ? '#ffffff' : '#0F172A', marginBottom: '0.35rem' }}>
                             {card.title}
                           </h4>
-                          <p style={{ fontSize: '0.85rem', color: '#CBD5E1', lineHeight: 1.5 }}>
+                          <p style={{ fontSize: '0.85rem', color: isDark ? '#CBD5E1' : '#475569', lineHeight: 1.5 }}>
                             {card.tagline}
                           </p>
                         </div>
 
                         {/* Visual Thumbnail in the peek space */}
-                        <div style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.4)' : '#FFFFFF', backdropFilter: 'blur(8px)', padding: '0.75rem', borderRadius: '0.75rem', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0', boxShadow: isDark ? 'none' : '0 2px 8px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           <div style={{ width: 44, height: 44, borderRadius: 10, overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(96,165,250,0.4)' }}>
                             <img src={card.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           </div>
                           <div style={{ minWidth: 0 }}>
-                            <span style={{ fontSize: 10, fontWeight: 600, color: '#60A5FA', display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                            <span style={{ fontSize: 10, fontWeight: 600, color: '#2563EB', display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                               {card.category}
                             </span>
-                            <span style={{ fontSize: 12, color: '#E2E8F0', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                            <span style={{ fontSize: 12, color: isDark ? '#E2E8F0' : '#1E293B', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
                               {card.title}
                             </span>
                           </div>
@@ -895,7 +963,7 @@ export const NavPagesStack = () => {
                       <div className={`nav-stack-tab-strip ${isSelected ? 'is-active' : ''}`}>
                         {/* Number Index */}
                         <span
-                          style={{ fontFamily: "'Space Grotesk', monospace", fontSize: 12, fontWeight: 700, color: isSelected ? '#93C5FD' : '#94A3B8' }}
+                          style={{ fontFamily: "'Space Grotesk', monospace", fontSize: 12, fontWeight: 700, color: isSelected ? '#2563EB' : isDark ? '#94A3B8' : '#64748B' }}
                         >
                           0{cardIdx + 1}
                         </span>
@@ -911,8 +979,8 @@ export const NavPagesStack = () => {
                             width: 8,
                             height: 8,
                             borderRadius: '50%',
-                            backgroundColor: isSelected ? '#60A5FA' : '#475569',
-                            boxShadow: isSelected ? '0 0 8px #60A5FA' : 'none',
+                            backgroundColor: isSelected ? '#2563EB' : isDark ? '#475569' : '#CBD5E1',
+                            boxShadow: isSelected ? '0 0 8px rgba(37,99,235,0.6)' : 'none',
                             transform: isSelected ? 'scale(1.25)' : 'scale(1)',
                             transition: 'all 0.25s'
                           }}
@@ -943,22 +1011,38 @@ export const NavPagesStack = () => {
                   <div key={currentCard.id} style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
                       {/* TOP VISUAL BANNER with GK Monogram & Badges (Whiteboard Style) */}
-                      <div style={{ position: 'relative', width: '100%', height: 200, borderRadius: '0.85rem', overflow: 'hidden', marginBottom: '1.15rem', flexShrink: 0, backgroundColor: '#0F172A', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <div style={{ position: 'relative', width: '100%', height: 215, borderRadius: '1rem', overflow: 'hidden', marginBottom: '1.15rem', flexShrink: 0, backgroundColor: isDark ? '#0F172A' : '#F1F5F9', border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #E2E8F0' }}>
                         <img
                           src={currentCard.image}
                           alt={currentCard.title}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           loading="lazy"
                         />
-                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0B1528 0%, rgba(11,21,40,0.3) 50%, rgba(0,0,0,0.6) 100%)' }} />
+                        <div style={{ position: 'absolute', inset: 0, background: isDark ? 'linear-gradient(to top, #0B1528 0%, rgba(11,21,40,0.3) 50%, rgba(0,0,0,0.6) 100%)' : 'linear-gradient(to top, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.3) 50%, rgba(0,0,0,0.5) 100%)' }} />
 
-                        {/* Floating Badges: GK Monogram from whiteboard */}
+                        {/* Floating Badges: GK Logo from chatbot */}
                         <div style={{ position: 'absolute', top: 12, left: 12, right: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                             <div
-                              style={{ fontFamily: "'Outfit', sans-serif", width: 36, height: 36, borderRadius: 9, backgroundColor: '#2563EB', color: '#ffffff', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, boxShadow: '0 4px 14px rgba(37,99,235,0.5)', border: '1px solid rgba(96,165,250,0.6)' }}
+                              style={{
+                                width: 38,
+                                height: 38,
+                                borderRadius: '50%',
+                                backgroundColor: '#ffffff',
+                                border: '1.5px solid rgba(255,255,255,0.85)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                boxShadow: '0 4px 14px rgba(0,0,0,0.35)',
+                              }}
                             >
-                              GK
+                              <img
+                                src="/images/gk-avatar-badge.png"
+                                alt="GK Nexergy Logo"
+                                style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px' }}
+                              />
                             </div>
                             <span
                               style={{ fontFamily: "'Outfit', sans-serif", fontSize: 11, fontWeight: 700, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)', padding: '0.25rem 0.65rem', borderRadius: 6, border: '1px solid rgba(255,255,255,0.1)' }}
@@ -973,37 +1057,25 @@ export const NavPagesStack = () => {
                             0{currentIndex + 1} / 0{total}
                           </span>
                         </div>
-
-                        {/* Bottom Overlay Label */}
-                        <div style={{ position: 'absolute', bottom: 10, left: 14, right: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 10 }}>
-                          <span
-                            style={{ fontFamily: "'Space Grotesk', monospace", fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#CBD5E1', fontWeight: 600 }}
-                          >
-                            {currentCard.category}
-                          </span>
-                          <span style={{ fontSize: 11, color: '#93C5FD', display: 'flex', alignItems: 'center', gap: 4, fontWeight: 600 }}>
-                            {currentCard.highlightOutcome} <ArrowUpRight style={{ width: 14, height: 14 }} />
-                          </span>
-                        </div>
                       </div>
 
                       {/* Title & Tagline */}
                       <h3
-                        style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem', lineHeight: 1.2 }}
+                        style={{ fontFamily: "'Outfit', sans-serif", fontSize: '1.5rem', fontWeight: 800, color: isDark ? '#ffffff' : '#0F172A', marginBottom: '0.35rem', lineHeight: 1.2 }}
                       >
                         {currentCard.title}
                       </h3>
                       <p
-                        style={{ fontFamily: "'Inter', sans-serif", color: '#CBD5E1', fontSize: '0.9rem', fontWeight: 500, marginBottom: '1rem', lineHeight: 1.5 }}
+                        style={{ fontFamily: "'Inter', sans-serif", color: isDark ? '#CBD5E1' : '#475569', fontSize: '0.9rem', fontWeight: 500, marginBottom: '1rem', lineHeight: 1.5 }}
                       >
                         {currentCard.tagline}
                       </p>
 
                       {/* 4 Feature Deliverable Bullets (Matching the Whiteboard Card Lines) */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '0.85rem', backgroundColor: 'rgba(0,0,0,0.3)', padding: '0.9rem 1rem', borderRadius: '0.85rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '0.85rem', backgroundColor: isDark ? 'rgba(0,0,0,0.3)' : '#F8FAFC', padding: '0.9rem 1rem', borderRadius: '0.85rem', border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #E2E8F0' }}>
                         {currentCard.bullets.map((b, i) => (
-                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.85rem', color: '#E2E8F0' }}>
-                            <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: 'rgba(37,99,235,0.2)', color: '#60A5FA', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.85rem', color: isDark ? '#E2E8F0' : '#334155' }}>
+                            <div style={{ width: 16, height: 16, borderRadius: '50%', backgroundColor: 'rgba(37,99,235,0.15)', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                               <Check style={{ width: 11, height: 11 }} />
                             </div>
                             <span style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1.4, fontSize: '0.85rem' }}>{b}</span>
@@ -1013,14 +1085,15 @@ export const NavPagesStack = () => {
                     </div>
 
                     {/* Bottom Info Strip */}
-                    <div style={{ paddingTop: '0.85rem', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                      <span style={{ fontWeight: 600, color: '#94A3B8', fontSize: '0.8rem', letterSpacing: '0.04em' }}>
+                    <div style={{ paddingTop: '0.85rem', borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                      <span style={{ fontWeight: 600, color: isDark ? '#94A3B8' : '#64748B', fontSize: '0.8rem', letterSpacing: '0.04em' }}>
                         {currentCard.highlightOutcome}
                       </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, color: '#60A5FA' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 700, color: '#2563EB' }}>
                         <span style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.08em' }}>
                           {currentCard.badge}
                         </span>
+                        <ArrowUpRight style={{ width: 13, height: 13 }} />
                       </div>
                     </div>
                   </div>

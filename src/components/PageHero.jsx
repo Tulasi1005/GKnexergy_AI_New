@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ChevronLeft, Layers } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Reveal, MaskedLines } from "./Reveal";
 
 const PageHero = ({ eyebrow, titleLines, description, children, showBackToStack = true, testId = "page-hero" }) => (
@@ -14,11 +14,11 @@ const PageHero = ({ eyebrow, titleLines, description, children, showBackToStack 
                                 <Link
                                     to="/home#pages-stack-section"
                                     data-testid="back-to-stack-link"
-                                    className="group inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 sm:px-3.5 py-1.5 text-xs font-bold text-brand hover:border-brand/40 dark:border-blue-400/20 dark:bg-blue-400/10 dark:text-blue-300 transition-all hover:scale-105"
+                                    aria-label="Back"
+                                    title="Back"
+                                    className="group inline-flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-full border border-blue-500/25 bg-blue-500/10 text-brand hover:border-brand/50 hover:bg-blue-500/20 dark:border-blue-400/25 dark:bg-blue-400/10 dark:text-blue-300 dark:hover:bg-blue-400/20 transition-all duration-200 hover:scale-105 shadow-sm"
                                 >
-                                    <ChevronLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-                                    <Layers className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400" />
-                                    <span>Back to Stack of Cards</span>
+                                    <ChevronLeft className="h-4 w-4 sm:h-4.5 sm:w-4.5 transition-transform group-hover:-translate-x-0.5" />
                                 </Link>
                             </Reveal>
                         )}

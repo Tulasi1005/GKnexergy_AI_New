@@ -5,7 +5,7 @@
  * 1. Strict language matching: Telugu queries receive 100% Telugu responses; English queries receive English responses.
  * 2. Natural, human-like dialogue with concise, intelligent, and context-aware responses.
  * 3. Multi-turn conversation context tracking across Enterprise Solutions, Academy, Case Studies, and Careers.
- * 4. Accurate GK Nexergy ground-truth facts (Vizag tech hub, 100% IP ownership, autonomous pods, contact channels).
+ * 4. Accurate GK Nexergy ground-truth facts (Enterprise tech hub, 100% IP ownership, autonomous pods, contact channels).
  * 5. Optional OpenAI API integration (GPT-4o) with instant conversational local fallback.
  */
 
@@ -18,18 +18,18 @@ export const GK_CONTACT_INFO = {
   email: "contact@gknexergy.com",
   whatsappUrl: "https://wa.me/919704585960?text=Hi%20GK%20Nexergy%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services.",
   consultationForm: "https://forms.gle/GCqvWiWqxwvDSzoZ6",
-  headquarters: "Visakhapatnam (Vizag), Andhra Pradesh, India",
+  headquarters: "Andhra Pradesh, India",
   hours: "Monday – Saturday: 9:00 AM – 7:00 PM IST",
 };
 
 export const GK_SYSTEM_PROMPT = `
-You are the intelligent digital assistant for GK Nexergy (www.gknexergy.com), based in Visakhapatnam, India.
+You are the intelligent digital assistant for GK Nexergy (www.gknexergy.com), based in India.
 
 Persona:
 - You speak naturally, warmly, and intelligently — like an experienced engineering colleague or tech consultant.
 - Keep responses concise, clear, and conversational. Avoid walls of text or giant lists of bullet points unless specifically requested.
 - Multilingual Rule: If the user writes or speaks in Telugu (including Tanglish transliteration), reply 100% in natural Telugu script. If in English, reply in English. If in Hindi, reply in Hindi.
-- Accurate Company Facts: GK Nexergy delivers Enterprise Solutions (Software, Mobile Apps, AI & Automation, Data Analytics, Digital Growth) and Nexergy Academy (Cyber Security, PostgreSQL, Foundation Program, AI Marketing). Contact: +91 9704585960 | contact@gknexergy.com | Visakhapatnam, India.
+- Accurate Company Facts: GK Nexergy delivers Enterprise Solutions (Software, Mobile Apps, AI & Automation, Data Analytics, Digital Growth) and Nexergy Academy (Cyber Security, PostgreSQL, Foundation Program, AI Marketing). Contact: +91 9704585960 | contact@gknexergy.com | Andhra Pradesh, India.
 `;
 
 /**
@@ -80,7 +80,7 @@ export const CONVERSATIONAL_TOPICS = [
       if (isTelugu) {
         return {
           topic: "company",
-          text: "GK Nexergy వ్యాపారాల కోసం ఆధునిక సాఫ్ట్‌వేర్, మొబైల్ యాప్‌లు మరియు AI సొల్యూషన్స్‌ను నిర్మిస్తుంది, అలాగే Nexergy Academy ద్వారా తదుపరి తరం ఇంజనీర్లకు ప్రొఫెషనల్ శిక్షణ ఇస్తుంది.\n\nమేము **విశాఖపట్నం (Vizag), ఆంధ్రప్రదేశ్** కేంద్రంగా పనిచేస్తూ, 100% క్లయింట్ కోడ్ యాజమాన్యంతో ప్రాజెక్ట్‌లను డెలివరీ చేస్తున్నాము.\n\nమీరు మీ వ్యాపారం కోసం సాఫ్ట్‌వేర్ నిర్మించాలనుకుంటున్నారా లేదా మా అకాడమీ ట్రైనింగ్ ప్రోగ్రామ్‌లపై ఆసక్తి ఉందా?",
+          text: "GK Nexergy వ్యాపారాల కోసం ఆధునిక సాఫ్ట్‌వేర్, మొబైల్ యాప్‌లు మరియు AI సొల్యూషన్స్‌ను నిర్మిస్తుంది, అలాగే Nexergy Academy ద్వారా తదుపరి తరం ఇంజనీర్లకు ప్రొఫెషనల్ శిక్షణ ఇస్తుంది.\n\nమేము **ఆంధ్రప్రదేశ్, భారతదేశం** కేంద్రంగా పనిచేస్తూ, 100% క్లయింట్ కోడ్ యాజమాన్యంతో ప్రాజెక్ట్‌లను డెలివరీ చేస్తున్నాము.\n\nమీరు మీ వ్యాపారం కోసం సాఫ్ట్‌వేర్ నిర్మించాలనుకుంటున్నారా లేదా మా అకాడమీ ట్రైనింగ్ ప్రోగ్రామ్‌లపై ఆసక్తి ఉందా?",
           routes: [
             { label: "సొల్యూషన్స్ చూడండి", to: "/solutions" },
             { label: "Nexergy Academy", to: "/academy" },
@@ -91,7 +91,7 @@ export const CONVERSATIONAL_TOPICS = [
       if (isHindi) {
         return {
           topic: "company",
-          text: "GK Nexergy व्यवसायों के लिए आधुनिक सॉफ्टवेयर, मोबाइल ऐप्स और AI समाधान बनाती है, साथ ही Nexergy Academy के माध्यम से छात्रों को इंजीनियरिंग ट्रेनिंग देती है।\n\nहम **विशाखापत्तनम (Vizag), भारत** से संचालित होते हैं।\n\nक्या आप अपनी कंपनी के लिए सॉफ्टवेयर बनवाना चाहते हैं या एकेडमी कोर्सेज में रुचि रखते हैं?",
+          text: "GK Nexergy व्यवसायों के लिए आधुनिक सॉफ्टवेयर, मोबाइल ऐप्स और AI समाधान बनाती है, साथ ही Nexergy Academy के माध्यम से छात्रों को इंजीनियरिंग ट्रेनिंग देती है।\n\nहम **भारत** से संचालित होते हैं।\n\nक्या आप अपनी कंपनी के लिए सॉफ्टवेयर बनवाना चाहते हैं या एकेडमी कोर्सेज में रुचि रखते हैं?",
           routes: [
             { label: "समाधान देखें", to: "/solutions" },
             { label: "Nexergy Academy", to: "/academy" },
@@ -101,7 +101,7 @@ export const CONVERSATIONAL_TOPICS = [
       }
       return {
         topic: "company",
-        text: "GK Nexergy helps businesses build modern technology and AI solutions, while also training the next generation of engineers through Nexergy Academy.\n\nWe operate from **Visakhapatnam, India**, delivering custom software, mobile apps, AI automation, and cloud systems with 100% client code ownership.\n\nAre you looking to build a tech solution for your business, or interested in our academy training programs?",
+        text: "GK Nexergy helps businesses build modern technology and AI solutions, while also training the next generation of engineers through Nexergy Academy.\n\nWe operate from **India**, delivering custom software, mobile apps, AI automation, and cloud systems with 100% client code ownership.\n\nAre you looking to build a tech solution for your business, or interested in our academy training programs?",
         routes: [
           { label: "Explore Solutions", to: "/solutions" },
           { label: "Nexergy Academy", to: "/academy" },
@@ -157,7 +157,7 @@ export const CONVERSATIONAL_TOPICS = [
       }
       return {
         topic: "solutions-software",
-        text: "We engineer modern web applications, scalable SaaS platforms, and enterprise backend microservices using React, Next.js, Node.js, Python, and PostgreSQL.\n\nEvery project is delivered by dedicated agile pods in Vizag with full CI/CD automation and 100% IP ownership for you.\n\nDo you have a specific software project or architecture you'd like to discuss?",
+        text: "We engineer modern web applications, scalable SaaS platforms, and enterprise backend microservices using React, Next.js, Node.js, Python, and PostgreSQL.\n\nEvery project is delivered by dedicated agile pods with full CI/CD automation and 100% IP ownership for you.\n\nDo you have a specific software project or architecture you'd like to discuss?",
         routes: [
           { label: "Software Solutions", to: "/solutions/software-development" },
           { label: "View Projects", to: "/projects" },
@@ -203,7 +203,7 @@ export const CONVERSATIONAL_TOPICS = [
       if (isTelugu) {
         return {
           topic: "solutions-data",
-          text: "మేము లెగసీ సిస్టమ్‌లను ఆధునిక క్లౌడ్ ఆర్కిటెక్చర్‌లుగా మార్చడం, PostgreSQL డేటాబేస్‌లను ఆప్టిమైజ్ చేయడం మరియు రియల్-టైమ్ BI అనలిటిక్స్ డ్యాష్‌బోర్డ్‌లను రూపొందించడంలో కంపెనీలకు సహాయం చేస్తాము.\n\nమీరు డేటా & అనలిటిక్స్ లేదా డిజిటల్ ట్రాన్స్‌ఫర్మేషన్ సొల్యూషన్స్ గురించి తెలుసుకోవాలనుకుంటున్నారా?",
+          text: "మేము లెగసీ సిస్టమ్‌లను ఆధునిక క్లౌడ్ ఆర్కిటెక్చర్‌లుగా మార్చడం, ఎంటర్‌ప్రైజ్ డేటాబేస్‌లను ఆప్టిమైజ్ చేయడం మరియు రియల్-టైమ్ బిజినెస్ అనలిటిక్స్ డ్యాష్‌బోర్డ్‌లను రూపొందించడంలో కంపెనీలకు సహాయం చేస్తాము.\n\nమీరు డేటా & అనలిటిక్స్ లేదా డిజిటల్ ట్రాన్స్‌ఫర్మేషన్ సొల్యూషన్స్ గురించి తెలుసుకోవాలనుకుంటున్నారా?",
           routes: [
             { label: "డేటా & అనలిటిక్స్", to: "/solutions/data-analytics" },
             { label: "డిజిటల్ ట్రాన్స్‌ఫర్మేషన్", to: "/solutions/digital-transformation" },
@@ -213,7 +213,7 @@ export const CONVERSATIONAL_TOPICS = [
       }
       return {
         topic: "solutions-data",
-        text: "We help companies modernize legacy systems into cloud-native architectures, optimize PostgreSQL databases, and build real-time BI analytics dashboards.\n\nWe also provide digital growth engineering — combining SEO, conversion architecture, and AI marketing tools.\n\nWould you like to explore our Data & Analytics or Digital Transformation solutions?",
+        text: "We help companies modernize legacy systems into modern cloud architectures, optimize enterprise databases, and build real-time business analytics dashboards.\n\nWe also provide digital growth engineering — combining SEO, conversion strategy, and AI-driven growth tools.\n\nWould you like to explore our Data & Analytics or Digital Transformation solutions?",
         routes: [
           { label: "Data & Analytics", to: "/solutions/data-analytics" },
           { label: "Digital Transformation", to: "/solutions/digital-transformation" },
@@ -234,14 +234,14 @@ export const CONVERSATIONAL_TOPICS = [
       if (isTelugu) {
         return {
           topic: "solutions-general",
-          text: "మేము ఐదు ప్రధాన రంగాలలో ఎండ్-టు-ఎండ్ ఇంజనీరింగ్ సేవలను అందిస్తున్నాము:\n\n1. **సాఫ్ట్‌వేర్ & వెబ్ అప్లికేషన్లు** (React, Next.js, Node.js, Python)\n2. **మొబైల్ యాప్‌లు** (iOS, Android, React Native, Flutter)\n3. **AI & ప్రాసెస్ ఆటోమేషన్** (LLM Copilots, Document AI)\n4. **డేటా & అనలిటిక్స్** (PostgreSQL ఆర్కిటెక్చర్, BI పైప్‌లైన్స్)\n5. **డిజిటల్ గ్రోత్ & ట్రాన్స్‌ఫర్మేషన్**\n\nవీటిలో ఏ విభాగం గురించి మరింత తెలుసుకోవాలనుకుంటున్నారు?",
+          text: "మేము ఐదు ప్రధాన రంగాలలో ఎండ్-టు-ఎండ్ ఇంజనీరింగ్ సేవలను అందిస్తున్నాము:\n\n1. **సాఫ్ట్‌వేర్ & వెబ్ అప్లికేషన్లు** (వెబ్ & క్లౌడ్ ప్లాట్‌ఫారమ్‌లు)\n2. **మొబైల్ యాప్‌లు** (iOS & Android యాప్‌లు)\n3. **AI & ప్రాసెస్ ఆటోమేషన్** (ఇంటెలిజెంట్ అసిస్టెంట్లు, డాక్యుమెంట్ ప్రాసెసింగ్)\n4. **డేటా & అనలిటిక్స్** (ఎంటర్‌ప్రైజ్ డేటాబేస్‌లు, బిజినెస్ ఇంటెలిజెన్స్)\n5. **డిజిటల్ గ్రోత్ & ట్రాన్స్‌ఫర్మేషన్**\n\nవీటిలో ఏ విభాగం గురించి మరింత తెలుసుకోవాలనుకుంటున్నారు?",
           routes: [{ label: "అన్ని సొల్యూషన్స్", to: "/solutions" }],
           lang: "te",
         };
       }
       return {
         topic: "solutions-general",
-        text: "We offer end-to-end technology engineering across five core domains:\n\n1. **Software & Web Applications** (React, Next.js, Python, Node.js)\n2. **Mobile Apps** (iOS, Android, React Native, Flutter)\n3. **AI & Process Automation** (LLM Copilots, Document Intelligence, RPA)\n4. **Data & Analytics** (PostgreSQL Architecture, BI Pipelines)\n5. **Digital Growth & Transformation**\n\nWhich of these areas interests you most?",
+        text: "We offer end-to-end technology engineering across five core domains:\n\n1. **Software & Web Applications** (Custom Web & Cloud Platforms)\n2. **Mobile Apps** (Native iOS & Android Applications)\n3. **AI & Process Automation** (Intelligent AI Assistants, Smart Document Processing)\n4. **Data & Analytics** (Enterprise Database Architecture, Business Analytics)\n5. **Digital Growth & Transformation**\n\nWhich of these areas interests you most?",
         routes: [{ label: "Browse Solutions", to: "/solutions" }],
         lang: "en",
       };
@@ -259,7 +259,7 @@ export const CONVERSATIONAL_TOPICS = [
       if (isTelugu) {
         return {
           topic: "academy",
-          text: "Nexergy Academy అనేది విశాఖపట్నంలో మా ఇంజనీరింగ్ టాలెంట్ యాక్సిలరేషన్ ఎకోసిస్టమ్. మేము లైవ్ ప్రాజెక్ట్‌లతో కూడిన మెంటార్-లెడ్ కోర్సులను అందిస్తున్నాము:\n\n• **సైబర్ సెక్యూరిటీ & ఎథికల్ హ్యాకింగ్** (16 వారాలు, ప్రాక్టికల్ CTF ల్యాబ్‌లు)\n• **PostgreSQL డేటాబేస్ మాస్టరీ** (డీప్ SQL & ఇండెక్సింగ్ ఆర్కిటెక్చర్)\n• **ఫౌండేషన్ ప్రోగ్రామ్** (పైథాన్, SQL, క్లౌడ్ & AI బిగినర్స్ కోసం)\n• **AI టూల్స్ & డిజిటల్ మార్కెటింగ్**\n\nమీరు ఏ కోర్సు వివరాలు తెలుసుకోవాలనుకుంటున్నారు?",
+          text: "Nexergy Academy అనేది విశాఖపట్నంలో మా ఇంజనీరింగ్ టాలెంట్ యాక్సిలరేషన్ ఎకోసిస్టమ్. మేము లైవ్ ప్రాజెక్ట్‌లతో కూడిన మెంటార్-లెడ్ కోర్సులను అందిస్తున్నాము:\n\n• **సైబర్ సెక్యూరిటీ & ఎథికల్ హ్యాకింగ్** (16 వారాలు, ప్రాక్టికల్ CTF ల్యాబ్‌లు)\n• **ఎంటర్‌ప్రైజ్ డేటాబేస్ మాస్టరీ** (డేటా మోడలింగ్ & క్వెరీ పర్ఫార్మెన్స్)\n• **ఫౌండేషన్ ప్రోగ్రామ్** (పైథాన్, డేటాబేస్‌లు, క్లౌడ్ & AI బిగినర్స్ కోసం)\n• **AI టూల్స్ & డిజిటల్ మార్కెటింగ్**\n\nమీరు ఏ కోర్సు వివరాలు తెలుసుకోవాలనుకుంటున్నారు?",
           routes: [
             { label: "అన్ని కోర్సులు చూడండి", to: "/academy/courses" },
             { label: "ఫౌండేషన్ ప్రోగ్రామ్", to: "/academy/foundation-program" },
@@ -269,7 +269,7 @@ export const CONVERSATIONAL_TOPICS = [
       }
       return {
         topic: "academy",
-        text: "Nexergy Academy is our talent acceleration ecosystem in Visakhapatnam. We offer hands-on, mentor-led programs designed by working engineers:\n\n• **Cyber Security & Ethical Hacking** (16 weeks, hands-on CTF labs)\n• **PostgreSQL Database Mastery** (Deep SQL & indexing architecture)\n• **Foundation Program** (Python, SQL, Cloud & AI for beginners)\n• **AI Tools & Digital Marketing**\n\nWhich program would you like to explore?",
+        text: "Nexergy Academy is our talent acceleration ecosystem. We offer hands-on, mentor-led programs designed by working engineers:\n\n• **Cyber Security & Ethical Hacking** (16 weeks, hands-on CTF labs)\n• **Enterprise Database Mastery** (Data modelling & query performance)\n• **Foundation Program** (Python, Databases, Cloud & AI for beginners)\n• **AI Tools & Digital Marketing**\n\nWhich program would you like to explore?",
         routes: [
           { label: "Explore All Courses", to: "/academy/courses" },
           { label: "Foundation Program", to: "/academy/foundation-program" },
@@ -290,14 +290,14 @@ export const CONVERSATIONAL_TOPICS = [
       if (isTelugu) {
         return {
           topic: "academy-cyber",
-          text: "మా **సైబర్ సెక్యూరిటీ & ఎథికల్ హ్యాకింగ్** ప్రోగ్రామ్ 16 వారాల ఇంటెన్సివ్ బూట్‌క్యాంప్. ఇందులో రియల్ అటాక్ & డిఫెన్స్ మెథడాలజీలను ప్రాక్టికల్‌గా నేర్పిస్తాము.\n\nLinux హార్డెనింగ్, నెట్‌వర్క్ స్కానింగ్ (Nmap, Wireshark), వెబ్ యాప్ వల్నరబిలిటీస్ (OWASP Top 10), Metasploit మరియు లైవ్ CTF ల్యాబ్‌లలో శిక్షణ ఉంటుంది.\n\nసిలబస్ లేదా రాబోయే బ్యాచ్ తేదీలు చూడాలనుకుంటున్నారా?",
+          text: "మా **సైబర్ సెక్యూరిటీ & ఎథికల్ హ్యాకింగ్** ప్రోగ్రామ్ 16 వారాల ఇంటెన్సివ్ బూట్‌క్యాంప్. ఇందులో రియల్ అటాక్ & డిఫెన్స్ మెథడాలజీలను ప్రాక్టికల్‌గా నేర్పిస్తాము.\n\nసిస్టమ్ సెక్యూరిటీ, నెట్‌వర్క్ ప్రొటెక్షన్, వెబ్ అప్లికేషన్ సెక్యూరిటీ మరియు లైవ్ ల్యాబ్‌లలో శిక్షణ ఉంటుంది.\n\nసిలబస్ లేదా రాబోయే బ్యాచ్ తేదీలు చూడాలనుకుంటున్నారా?",
           routes: [{ label: "సైబర్ సెక్యూరిటీ కోర్స్", to: "/academy/cyber-security" }],
           lang: "te",
         };
       }
       return {
         topic: "academy-cyber",
-        text: "Our **Cyber Security & Ethical Hacking** program is a 16-week intensive bootcamp where you learn real attack & defense methodologies.\n\nYou'll get hands-on experience with Linux hardening, network scanning (Nmap, Wireshark), web app vulnerabilities (OWASP Top 10), Metasploit, and live CTF labs.\n\nWould you like details on the curriculum or upcoming batch schedule?",
+        text: "Our **Cyber Security & Ethical Hacking** program is a 16-week intensive bootcamp where you learn real attack & defense methodologies.\n\nYou'll get hands-on experience with system defense, network security, web application security, and practical hands-on labs.\n\nWould you like details on the curriculum or upcoming batch schedule?",
         routes: [{ label: "Cyber Security Course", to: "/academy/cyber-security" }],
         lang: "en",
       };
@@ -315,15 +315,46 @@ export const CONVERSATIONAL_TOPICS = [
       if (isTelugu) {
         return {
           topic: "academy-postgres",
-          text: "మా **PostgreSQL డేటాబేస్ మాస్టరీ** ప్రోగ్రామ్ ఎంటర్‌ప్రైజ్ డేటాబేస్ ఇంజనీరింగ్‌పై డీప్ ట్రైనింగ్ అందిస్తుంది.\n\nఇందులో స్కీమా డిజైన్, అడ్వాన్స్‌డ్ విండో ఫంక్షన్స్, క్వెరీ ఎగ్జిక్యూషన్ ప్లానింగ్ (EXPLAIN ANALYZE), ఇండెక్స్ ట్యూనింగ్ (B-Tree, GIN, BRIN) మరియు హై-అవైలబిలిటీ రెప్లికేషన్ ఉంటాయి.\n\nకోర్సు సిలబస్ చూడాలనుకుంటున్నారా?",
-          routes: [{ label: "PostgreSQL ప్రోగ్రామ్", to: "/academy/postgresql-mastery" }],
+          text: "మా **ఎంటర్‌ప్రైజ్ డేటాబేస్ మాస్టరీ** ప్రోగ్రామ్ స్కేలబుల్ డేటాబేస్ ఆర్కిటెక్చర్‌పై సమగ్ర శిక్షణ అందిస్తుంది.\n\nఇందులో డేటా మోడలింగ్, క్వెరీ పర్ఫార్మెన్స్ ఆప్టిమైజేషన్, స్కీమా డిజైన్ మరియు హై-అవైలబిలిటీ డేటా సిస్టమ్స్ ఉంటాయి.\n\nకోర్సు సిలబస్ చూడాలనుకుంటున్నారా?",
+          routes: [{ label: "డేటాబేస్ ప్రోగ్రామ్", to: "/academy/postgresql-mastery" }],
           lang: "te",
         };
       }
       return {
         topic: "academy-postgres",
-        text: "Our **PostgreSQL Database Mastery** program goes deep into enterprise database engineering.\n\nIt covers schema design, advanced window functions, query execution planning (EXPLAIN ANALYZE), index tuning (B-Tree, GIN, BRIN), MVCC concurrency, and high-availability replication.\n\nWould you like to see the course syllabus?",
-        routes: [{ label: "PostgreSQL Program", to: "/academy/postgresql-mastery" }],
+        text: "Our **Enterprise Database Mastery** program provides comprehensive training in scalable database architecture.\n\nIt covers data modelling, query performance optimization, schema design, high-availability data systems, and enterprise data security.\n\nWould you like to see the course syllabus?",
+        routes: [{ label: "Database Program", to: "/academy/postgresql-mastery" }],
+        lang: "en",
+      };
+    },
+  },
+
+  // 10b. PRICING PLANS & TIERS (STARTER, GROWTH, PREMIUM)
+  {
+    id: "pricing-plans",
+    intents: [
+      "pricing plan", "pricing plans", "plans", "pricing", "starter", "growth", "premium", "plan details", "pod cost", "software pricing", "how much does software cost",
+      "ప్లాన్స్", "ధరలు", "ప్రైసింగ్", "స్టార్టర్", "గ్రోత్", "ప్రీమియం", "ప్లాన్ వివరాలు"
+    ],
+    handler: (query, context, isTelugu, isHindi) => {
+      if (isTelugu) {
+        return {
+          topic: "pricing-plans",
+          text: "GK Nexergy 3 పారదర్శక నిశ్చితార్థ ప్రణాళికలను అందిస్తుంది:\n\n1. **Starter (>>)**: $1,499/నెల (₹99,000/నెల) — 2-3 వారాల రాపిడ్ MVP స్ప్రింట్, రియాక్ట్/నోడ్ యాప్, బేసిక్ AI, 100% IP యాజమాన్యం.\n2. **Growth (>>)** [అత్యంత ప్రజాదరణ]: $3,499/నెల (₹2,49,000/నెల) — డెడికేటెడ్ 2-3 ఇంజనీర్ల పోడ్, వెబ్ + మొబైల్ (iOS/Android), కస్టమ్ AI/RAG వర్క్‌ఫ్లోలు, 60 రోజుల సపోర్ట్.\n3. **Premium (>>)**: $6,999/నెల (₹4,99,000/నెల) — 4-6+ ఫుల్ ఎంటర్‌ప్రైజ్ పోడ్, కస్టమ్ AI రీజనింగ్ ఇంజిన్‌లు, 99.99% SLA, 24/7 ఎంటర్‌ప్రైజ్ సపోర్ట్.\n\nమీరు వివరాలు చూడాలనుకుంటున్నారా?",
+          routes: [
+            { label: "💳 ప్రైసింగ్ ప్లాన్స్ చూడండి", to: "/pricing" },
+            { label: "ఉచిత కన్సల్టేషన్ బుక్ చేయండి", to: "/contact" },
+          ],
+          lang: "te",
+        };
+      }
+      return {
+        topic: "pricing-plans",
+        text: "GK Nexergy offers **3 transparent engineering engagement tiers** with 100% IP ownership:\n\n• **Starter (>>)**: $1,499/mo (₹99,000/mo) or $2,999 Fixed Scope — 2–3 weeks rapid MVP deployment for startups.\n• **Growth (>>)** [Most Popular]: $3,499/mo (₹2,49,000/mo) — Dedicated 2–3 engineer agile pod for web + iOS/Android apps, custom AI/RAG workflows & cloud architecture.\n• **Premium (>>)**: $6,999/mo (₹4,99,000/mo) — Dedicated 4–6+ agile pod, enterprise AI reasoning engines, 99.99% uptime SLA & executive CTO advisory.\n\nWould you like to explore our full pricing comparison?",
+        routes: [
+          { label: "💳 View Pricing Plans", to: "/pricing" },
+          { label: "Schedule 30-Min Discovery", to: "/contact" },
+        ],
         lang: "en",
       };
     },
@@ -389,21 +420,21 @@ export const CONVERSATIONAL_TOPICS = [
   {
     id: "careers",
     intents: [
-      "career", "careers", "job", "jobs", "hiring", "work with us", "openings", "vizag jobs", "visakhapatnam jobs", "apply", "internship", "internships", "developer job",
-      "ఉద్యోగాలు", "జాబ్స్", "హైరింగ్", "కెరీర్స్", "విశాఖపట్నం ఉద్యోగాలు", "ఖాళీలు", "జాబ్ అప్లై", "jobs unnaya"
+      "career", "careers", "job", "jobs", "hiring", "work with us", "openings", "apply", "internship", "internships", "developer job",
+      "ఉద్యోగాలు", "జాబ్స్", "హైరింగ్", "కెరీర్స్", "ఖాళీలు", "జాబ్ అప్లై", "jobs unnaya"
     ],
     handler: (query, context, isTelugu, isHindi) => {
       if (isTelugu) {
         return {
           topic: "careers",
-          text: "మేము విశాఖపట్నంలో టాలెంటెడ్ ఇంజనీర్ల కోసం చూస్తున్నాము!\n\nప్రస్తుత ఉద్యోగ అవకాశాలు:\n• Full-Stack Developers (React & Node.js / Python)\n• AI & Machine Learning Engineers\n• PostgreSQL Database Engineers\n• Cyber Security Analysts\n\nవిశాఖపట్నంలోని అటానమస్ పాడ్స్‌లో డైరెక్ట్ ప్రొడక్ట్ ఓనర్‌షిప్‌తో పనిచేయడానికి ఆసక్తి ఉందా?",
+          text: "మేము టాలెంటెడ్ ఇంజనీర్ల కోసం చూస్తున్నాము!\n\nప్రస్తుత ఉద్యోగ అవకాశాలు:\n• Full-Stack Developers (React & Node.js / Python)\n• AI & Machine Learning Engineers\n• PostgreSQL Database Engineers\n• Cyber Security Analysts\n\nమా అటానమస్ పాడ్స్‌లో డైరెక్ట్ ప్రొడక్ట్ ఓనర్‌షిప్‌తో పనిచేయడానికి ఆసక్తి ఉందా?",
           routes: [{ label: "కెరీర్స్ చూడండి & అప్లై చేయండి", to: "/careers" }],
           lang: "te",
         };
       }
       return {
         topic: "careers",
-        text: "We're always looking for talented engineers in **Visakhapatnam**!\n\nCurrent active roles include:\n• Full-Stack Developers (React & Node.js / Python)\n• AI & Machine Learning Engineers\n• PostgreSQL Database Engineers\n• Cyber Security Analysts\n\nWe offer direct product ownership in autonomous pods with transparent growth paths.",
+        text: "We're always looking for talented engineers to join our autonomous pods!\n\nCurrent active roles include:\n• Full-Stack Developers (React & Node.js / Python)\n• AI & Machine Learning Engineers\n• PostgreSQL Database Engineers\n• Cyber Security Analysts\n\nWe offer direct product ownership in autonomous pods with transparent growth paths.",
         routes: [{ label: "View Careers & Apply", to: "/careers" }],
         lang: "en",
       };
@@ -414,14 +445,14 @@ export const CONVERSATIONAL_TOPICS = [
   {
     id: "contact",
     intents: [
-      "contact", "phone", "call", "whatsapp", "email", "reach", "location", "address", "office", "talk to human", "book call", "consultation", "visakhapatnam", "vizag",
-      "సంప్రదించండి", "ఫోన్ నెంబర్", "ఫోన్", "వాట్సాప్", "ఈమెయిల్", "ఆఫీస్ ఎక్కడ", "వైజాగ్ ఆఫీస్", "విశాఖపట్నం", "కాంటాక్ట్ నెంబర్", "మాట్లాడాలి", "contact details", "phone number"
+      "contact", "phone", "call", "whatsapp", "email", "reach", "location", "address", "office", "talk to human", "book call", "consultation",
+      "సంప్రదించండి", "ఫోన్ నెంబర్", "ఫోన్", "వాట్సాప్", "ఈమెయిల్", "ఆఫీస్ ఎక్కడ", "కాంటాక్ట్ నెంబర్", "మాట్లాడాలి", "contact details", "phone number"
     ],
     handler: (query, context, isTelugu, isHindi) => {
       if (isTelugu) {
         return {
           topic: "contact",
-          text: "మీరు మా ఇంజనీరింగ్ బృందాన్ని ఎప్పుడైనా నేరుగా సంప్రదించవచ్చు:\n\n• **డైరెక్ట్ ఫోన్**: [+91 9704585960](tel:+919704585960)\n• **WhatsApp**: [మాతో WhatsAppలో మాట్లాడండి](https://wa.me/919704585960?text=Hi%20GK%20Nexergy)\n• **ఈమెయిల్**: [contact@gknexergy.com](mailto:contact@gknexergy.com)\n• **ఆఫీస్**: విశాఖపట్నం (వైజాగ్), ఆంధ్రప్రదేశ్, భారతదేశం\n• **పనివేళలు**: సోమ – శని: ఉదయం 9:00 – రాత్రి 7:00 IST\n\nవిచారణలకు **10 నిమిషాల్లో** ప్రతిస్పందన లభిస్తుంది.",
+          text: "మీరు మా ఇంజనీరింగ్ బృందాన్ని ఎప్పుడైనా నేరుగా సంప్రదించవచ్చు:\n\n• **డైరెక్ట్ ఫోన్**: [+91 9704585960](tel:+919704585960)\n• **WhatsApp**: [మాతో WhatsAppలో మాట్లాడండి](https://wa.me/919704585960?text=Hi%20GK%20Nexergy)\n• **ఈమెయిల్**: [contact@gknexergy.com](mailto:contact@gknexergy.com)\n• **ఆఫీస్**: ఆంధ్రప్రదేశ్, భారతదేశం\n• **పనివేళలు**: సోమ – శని: ఉదయం 9:00 – రాత్రి 7:00 IST\n\nవిచారణలకు **10 నిమిషాల్లో** ప్రతిస్పందన లభిస్తుంది.",
           routes: [
             { label: "💬 WhatsAppలో మాట్లాడండి", to: "https://wa.me/919704585960?text=Hi%20GK%20Nexergy", external: true },
             { label: "కన్సల్టేషన్ బుక్ చేయండి", to: "/contact" },
@@ -431,7 +462,7 @@ export const CONVERSATIONAL_TOPICS = [
       }
       return {
         topic: "contact",
-        text: "You can reach our team directly at any time:\n\n• **Direct Phone**: [+91 9704585960](tel:+919704585960)\n• **WhatsApp**: [Chat with us directly](https://wa.me/919704585960?text=Hi%20GK%20Nexergy)\n• **Email**: [contact@gknexergy.com](mailto:contact@gknexergy.com)\n• **Office**: Visakhapatnam (Vizag), Andhra Pradesh, India\n• **Hours**: Mon – Sat: 9:00 AM – 7:00 PM IST\n\nInquiries receive an engineering response within **10 minutes**.",
+        text: "You can reach our team directly at any time:\n\n• **Direct Phone**: [+91 9704585960](tel:+919704585960)\n• **WhatsApp**: [Chat with us directly](https://wa.me/919704585960?text=Hi%20GK%20Nexergy)\n• **Email**: [contact@gknexergy.com](mailto:contact@gknexergy.com)\n• **Office**: Andhra Pradesh, India\n• **Hours**: Mon – Sat: 9:00 AM – 7:00 PM IST\n\nInquiries receive an engineering response within **10 minutes**.",
         routes: [
           { label: "💬 Chat on WhatsApp", to: "https://wa.me/919704585960?text=Hi%20GK%20Nexergy", external: true },
           { label: "Book Consultation", to: "/contact" },
@@ -452,14 +483,14 @@ export const CONVERSATIONAL_TOPICS = [
       if (isTelugu) {
         return {
           topic: "why-us",
-          text: "క్లయింట్లు GK Nexergy ని ఎంచుకోవడానికి ప్రధాన కారణాలు:\n\n1. **100% IP & కోడ్ యాజమాన్యం**: మీరు మొదటి రోజు నుండే ప్రతి కోడ్ లైన్ మరియు డేటాబేస్ స్కీమాను పూర్తిగా కలిగి ఉంటారు.\n2. **అటానమస్ ఎజైల్ పాడ్స్**: విశాఖపట్నంలోని డెడికేటెడ్ ఇంజనీరింగ్ బృందాలు వేగంగా డెలివరీ చేస్తాయి.\n3. **టాలెంట్ నాణ్యత**: Nexergy Academy ద్వారా నిరంతరం శిక్షణ పొందిన ఉత్తమ ఇంజనీరింగ్ బెంచ్.\n\nమీరు 30 నిమిషాల ఉచిత కాల్‌ను షెడ్యూల్ చేయాలనుకుంటున్నారా?",
+          text: "క్లయింట్లు GK Nexergy ని ఎంచుకోవడానికి ప్రధాన కారణాలు:\n\n1. **100% IP & కోడ్ యాజమాన్యం**: మీరు మొదటి రోజు నుండే ప్రతి కోడ్ లైన్ మరియు డేటాబేస్ స్కీమాను పూర్తిగా కలిగి ఉంటారు.\n2. **అటానమస్ ఎజైల్ పాడ్స్**: డెడికేటెడ్ ఇంజనీరింగ్ బృందాలు వేగంగా డెలివరీ చేస్తాయి.\n3. **టాలెంట్ నాణ్యత**: Nexergy Academy ద్వారా నిరంతరం శిక్షణ పొందిన ఉత్తమ ఇంజనీరింగ్ బెంచ్.\n\nమీరు 30 నిమిషాల ఉచిత కాల్‌ను షెడ్యూల్ చేయాలనుకుంటున్నారా?",
           routes: [{ label: "కన్సల్టేషన్ కాల్ బుక్ చేయండి", to: "/contact" }],
           lang: "te",
         };
       }
       return {
         topic: "why-us",
-        text: "Clients partner with GK Nexergy for three core reasons:\n\n1. **100% IP & Code Ownership**: You own every line of code and database schema from day one.\n2. **Autonomous Agile Pods**: Dedicated full-stack teams in Vizag that build fast without agency bureaucracy.\n3. **Talent Quality**: Direct integration with Nexergy Academy gives us a strong, continuously trained engineering bench.\n\nWould you like to schedule a quick 30-minute discovery call?",
+        text: "Clients partner with GK Nexergy for three core reasons:\n\n1. **100% IP & Code Ownership**: You own every line of code and database schema from day one.\n2. **Autonomous Agile Pods**: Dedicated full-stack teams that build fast without agency bureaucracy.\n3. **Talent Quality**: Direct integration with Nexergy Academy gives us a strong, continuously trained engineering bench.\n\nWould you like to schedule a quick 30-minute discovery call?",
         routes: [{ label: "Book Discovery Call", to: "/contact" }],
         lang: "en",
       };
@@ -695,7 +726,17 @@ export async function askGKChatbot(queryText, customApiKey = "", context = {}) {
     };
   }
 
-  // 2. OpenAI API Integration (if configured)
+  // ===========================================================================
+  // 2. OpenAI API Integration (Configured via .env)
+  // ===========================================================================
+  // The OpenAI key is loaded from .env via `import.meta.env.VITE_OPENAI_API_KEY`.
+  // To activate live OpenAI GPT responses in production/development:
+  // 1. Set `VITE_OPENAI_API_KEY=sk-...` in your `.env` file.
+  // 2. Uncomment the block below.
+  // GK Nexergy Assistant will then use live GPT-4o-mini with ground-truth RAG,
+  // falling back automatically to the local knowledge base whenever needed.
+  // ---------------------------------------------------------------------------
+  /*
   const apiKey = customApiKey || (typeof import.meta !== "undefined" && import.meta.env?.VITE_OPENAI_API_KEY) || "";
 
   if (apiKey && apiKey.startsWith("sk-")) {
@@ -752,6 +793,7 @@ export async function askGKChatbot(queryText, customApiKey = "", context = {}) {
       console.warn("OpenAI fallback to local knowledge:", err);
     }
   }
+  */
 
   // 3. Local conversational engine with Guaranteed Exact Language Output
   const localMatch = queryLocalKnowledgeBase(trimmed, {

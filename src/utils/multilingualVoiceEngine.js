@@ -242,7 +242,25 @@ if (typeof window !== "undefined") {
 
 let speechKeepAliveTimer = null;
 
+// Audio player instance for cloud TTS fallback
+let activeAudio = null;
+let currentAudioQueue = [];
+let isAudioQueuePlaying = false;
+
 export function stopSpeaking() {
+  // Stop audio queue
+  currentAudioQueue = [];
+  isAudioQueuePlaying = false;
+  if (activeAudio) {
+    try {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+      activeAudio.src = "";
+    } catch (e) {}
+    activeAudio = null;
+  }
+
+  // Stop browser speech synthesis
   if (speechKeepAliveTimer) {
     clearInterval(speechKeepAliveTimer);
     speechKeepAliveTimer = null;
@@ -257,6 +275,25 @@ export function stopSpeaking() {
       window.__gkSpeechUtterances.length = 0;
     }
   }
+}
+
+/**
+ * Check if browser has a native voice installed for a given locale
+ */
+export function hasNativeVoiceFor(langCode) {
+  if (typeof window === "undefined" || !window.speechSynthesis) return false;
+  let voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) voices = cachedVoices;
+  if (!voices || voices.length === 0) return false;
+
+  const clean = langCode.toLowerCase().replace("_", "-");
+  const prefix = clean.split("-")[0];
+
+  return voices.some((v) => {
+    const vLang = v.lang.toLowerCase().replace("_", "-");
+    const vName = v.name.toLowerCase();
+    return vLang === clean || vLang.startsWith(prefix) || vName.includes(prefix);
+  });
 }
 
 /**
@@ -282,7 +319,7 @@ function findBestVoice(locale) {
   voice = voices.find(v => v.lang.toLowerCase().startsWith(prefix));
   if (voice) return voice;
 
-  // 3. Named language match (e.g. name contains "Telugu" or "Hindi")
+  // 3. Named language match (e.g. name contains "Telugu", "Hindi", "Tamil")
   const langNameMap = {
     te: "telugu",
     hi: "hindi",
@@ -303,45 +340,122 @@ function findBestVoice(locale) {
     if (voice) return voice;
   }
 
-  // 4. IMPORTANT: If requesting a non-English language (e.g. Telugu, Tamil, Hindi)
-  // and no native voice is installed, do NOT force an English voice on Telugu text!
-  // Leaving utterance.voice undefined lets the browser synthesize using the locale tag without crashing.
-  if (prefix !== "en") {
-    return null;
-  }
+  // 4. Indian English voice fallback for Indian languages without desktop TTS (e.g. Telugu/Tamil on Windows)
+  const indianVoice = voices.find(v => {
+    const lang = v.lang.toLowerCase();
+    const name = v.name.toLowerCase();
+    return lang.includes("en-in") || name.includes("india") || name.includes("heera") || name.includes("neerja") || name.includes("ravi");
+  });
+  if (indianVoice) return indianVoice;
 
   // 5. Default natural English voice for English text
   voice = voices.find(v => v.lang.toLowerCase().includes("en-in") || v.lang.toLowerCase().includes("en-us") || v.lang.toLowerCase().includes("en-gb"));
   return voice || voices[0] || null;
 }
 
-export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {}) {
-  if (!isSpeechSynthesisSupported()) return false;
+/**
+ * Play multi-chunk Google TTS Audio stream (supports native Telugu, Hindi, Tamil, Kannada, Bengali, etc.)
+ */
+function playGoogleTTSStream(text, langCode, { onStart, onEnd, onError }) {
+  // Split into manageable sentence chunks (<= 120 chars) for Google TTS URL length limit
+  const sentences = text
+    .split(/(?<=[.?!।,।\n])\s+/)
+    .map(s => s.trim())
+    .filter(Boolean);
 
-  stopSpeaking();
+  if (sentences.length === 0) {
+    onEnd?.();
+    return false;
+  }
 
-  // Strip Markdown, code snippets, bullets, links, emojis for clean natural speech
-  const speechText = text
-    .replace(/```[\s\S]*?```/g, "")      // remove code blocks
-    .replace(/`([^`]+)`/g, "$1")         // inline code
-    .replace(/\[(.*?)\]\(.*?\)/g, "$1")  // remove markdown links, keep label
-    .replace(/[*_#~>|]/g, "")            // remove formatting markers
-    .replace(/^[-*+]\s+/gm, "")          // remove list bullets
-    .replace(/\s+/g, " ")
-    .trim();
+  const chunks = [];
+  for (const s of sentences) {
+    if (s.length <= 120) {
+      chunks.push(s);
+    } else {
+      // Split large sentence by words
+      const words = s.split(" ");
+      let curr = "";
+      for (const w of words) {
+        if ((curr + " " + w).length <= 120) {
+          curr = curr ? curr + " " + w : w;
+        } else {
+          if (curr) chunks.push(curr);
+          curr = w;
+        }
+      }
+      if (curr) chunks.push(curr);
+    }
+  }
 
-  if (!speechText) return false;
+  currentAudioQueue = chunks;
+  isAudioQueuePlaying = true;
+  let chunkIndex = 0;
+  let hasStarted = false;
 
+  const playNextChunk = () => {
+    if (!isAudioQueuePlaying || chunkIndex >= currentAudioQueue.length) {
+      isAudioQueuePlaying = false;
+      onEnd?.();
+      return;
+    }
+
+    const chunk = currentAudioQueue[chunkIndex];
+    chunkIndex++;
+
+    const ttsLang = langCode === "auto" ? "en" : langCode.split("-")[0];
+    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${ttsLang}&client=tw-ob&q=${encodeURIComponent(chunk)}`;
+
+    const audio = new Audio(audioUrl);
+    activeAudio = audio;
+
+    audio.oncanplaythrough = () => {
+      if (!hasStarted) {
+        hasStarted = true;
+        onStart?.();
+      }
+      audio.play().catch((err) => {
+        console.warn("Audio play blocked or interrupted:", err);
+        // Fallback to Web Speech on failure
+        speakWebSpeech(text, langCode, { onStart, onEnd, onError });
+      });
+    };
+
+    audio.onended = () => {
+      playNextChunk();
+    };
+
+    audio.onerror = (e) => {
+      console.warn("Google TTS audio stream error, falling back to Web Speech:", e);
+      // Seamless fallback to Web Speech Synthesis
+      speakWebSpeech(text, langCode, { onStart, onEnd, onError });
+    };
+
+    audio.load();
+  };
+
+  playNextChunk();
+  return true;
+}
+
+/**
+ * Standard Web Speech Synthesis implementation
+ */
+function speakWebSpeech(speechText, langCode, { onStart, onEnd, onError }) {
   const locale = getLanguageLocale(langCode);
   const utterance = new SpeechSynthesisUtterance(speechText);
-  utterance.lang = locale;
-  utterance.rate = 1.0;
-  utterance.pitch = 1.0;
-
+  
   const selectedVoice = findBestVoice(locale);
   if (selectedVoice) {
     utterance.voice = selectedVoice;
+    // Set matching voice language tag so Chrome doesn't error out
+    utterance.lang = selectedVoice.lang || locale;
+  } else {
+    utterance.lang = locale;
   }
+
+  utterance.rate = 1.0;
+  utterance.pitch = 1.0;
 
   // Prevent Garbage Collection in Chromium
   if (typeof window !== "undefined" && window.__gkSpeechUtterances) {
@@ -360,7 +474,6 @@ export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {
   };
 
   utterance.onstart = () => {
-    // Chromium long speech workaround: pulse pause/resume every 10 seconds to keep synthesizer alive
     if (speechKeepAliveTimer) clearInterval(speechKeepAliveTimer);
     speechKeepAliveTimer = setInterval(() => {
       try {
@@ -381,7 +494,6 @@ export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {
 
   utterance.onerror = (e) => {
     cleanup();
-    // "canceled" or "interrupted" is normal when user stops or sends new message
     if (e.error !== "canceled" && e.error !== "interrupted") {
       onError?.(e);
     } else {
@@ -389,14 +501,12 @@ export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {
     }
   };
 
-  // Chromium resume bug fix: ensure synthesis is not paused
   try {
     if (window.speechSynthesis.paused) {
       window.speechSynthesis.resume();
     }
   } catch (e) {}
 
-  // Short timeout ensures previous cancel() cycle is finished in Chrome/Edge
   setTimeout(() => {
     try {
       window.speechSynthesis.speak(utterance);
@@ -407,6 +517,41 @@ export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {
   }, 40);
 
   return true;
+}
+
+/**
+ * Universal Intelligent Multilingual Text to Speech
+ * Automatically routes to Native Voices, High-Fidelity Indic Audio Stream, or Indian English synthesis.
+ */
+export function speakText(text, langCode = "en", { onStart, onEnd, onError } = {}) {
+  stopSpeaking();
+
+  // Strip Markdown, code snippets, bullets, links, emojis for clean natural speech
+  const speechText = text
+    .replace(/```[\s\S]*?```/g, "")      // remove code blocks
+    .replace(/`([^`]+)`/g, "$1")         // inline code
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1")  // remove markdown links, keep label
+    .replace(/[*_#~>|]/g, "")            // remove formatting markers
+    .replace(/^[-*+]\s+/gm, "")          // remove list bullets
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!speechText) return false;
+
+  const detectedLang = langCode && langCode !== "auto" ? langCode : detectLanguage(speechText);
+  const cleanLang = detectedLang.split("-")[0];
+
+  // Check if text contains non-Latin native script (Telugu, Hindi, Tamil, Kannada, Bengali, Arabic, etc.)
+  const hasIndicScript = /[\u0C00-\u0C7F\u0900-\u097F\u0B80-\u0BFF\u0C80-\u0CFF\u0980-\u09FF\u0600-\u06FF]/.test(speechText);
+  
+  // If the browser lacks a native TTS voice for this Indic language and text has native script,
+  // stream high-quality audio directly via Google TTS stream!
+  if (hasIndicScript && !hasNativeVoiceFor(cleanLang)) {
+    return playGoogleTTSStream(speechText, cleanLang, { onStart, onEnd, onError });
+  }
+
+  // Otherwise, use browser SpeechSynthesis
+  return speakWebSpeech(speechText, detectedLang, { onStart, onEnd, onError });
 }
 
 /**

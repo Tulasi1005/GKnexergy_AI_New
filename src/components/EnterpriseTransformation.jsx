@@ -27,10 +27,10 @@ const PIPELINE_PHASES = [
         badgeClass: "blue",
         iconBgClass: "bg-blue-500",
         title: "Unified Enterprise Data Layer",
-        description: "Unify fragmented ERPs, transactional databases, and unstructured documents into high-speed PostgreSQL data lakes with zero data silos.",
+        description: "Unify fragmented enterprise systems, business databases, and documents into high-speed unified data architectures with zero silos.",
         tags: [
-            "PostgreSQL & Lakes",
-            "Real-Time ETL",
+            "Unified Data Layer",
+            "Real-Time Integration",
             "Data Governance",
             "Zero Data Silos"
         ],
@@ -49,14 +49,14 @@ const PIPELINE_PHASES = [
         badgeClass: "blue",
         iconBgClass: "bg-indigo-500",
         title: "Custom AI Reasoning Engines",
-        description: "Deploy private domain-adapted LLMs, multi-agent reasoning chains, and real-time semantic retrieval engines built securely into your core software.",
+        description: "Deploy custom intelligence engines, automated reasoning workflows, and instant semantic search built securely into your core software.",
         tags: [
-            "Domain-Specific LLMs",
-            "Private RAG Stack",
-            "Multi-Agent Chains",
+            "Custom AI Engines",
+            "Private Knowledge Search",
+            "Automated Workflows",
             "Zero Data Leakage"
         ],
-        footerLeft: "Enterprise Grade • Dedicated GPU Pods",
+        footerLeft: "Enterprise Grade • High-Performance AI Compute",
         footerLink: "/solutions/ai-automation",
     },
     {
@@ -73,9 +73,9 @@ const PIPELINE_PHASES = [
         title: "Intelligent Process Execution",
         description: "Automate complex business handoffs, customer operations, and intelligent document processing end-to-end.",
         tags: [
-            "Doc Processing",
-            "ERP Integration",
-            "Agentic Copilots",
+            "Document Processing",
+            "System Integration",
+            "AI Smart Assistants",
             "Zero Redundancy"
         ],
         footerLeft: "Enterprise Grade • Autonomous Pods",
@@ -97,7 +97,7 @@ const PIPELINE_PHASES = [
         tags: [
             "Predictive Insights",
             "Executive Dashboards",
-            "Automated SLA Alerts",
+            "Performance Alerts",
             "Continuous ROI"
         ],
         footerLeft: "Enterprise Grade • 99.99% Reliability",
@@ -183,7 +183,7 @@ export const EnterpriseTransformation = () => {
                                         <Database size={18} strokeWidth={2.2} />
                                     </div>
                                     <span className="et-feature-title">
-                                        PostgreSQL & Data Lakes
+                                        Unified Data Architecture
                                     </span>
                                 </div>
 

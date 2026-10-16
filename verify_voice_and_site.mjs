@@ -38,8 +38,8 @@ async function comprehensiveCheck() {
     { q: "సైబర్ సెక్యూరిటీ కోర్స్ వివరాలు ఏమిటి?", expectedLang: "te" },
     { q: "What is the fee for the courses?", expectedLang: "en" },
     { q: "కోర్స్ ఫీజు వివరాలు ఎంత?", expectedLang: "te" },
-    { q: "How can I contact GK Nexergy in Vizag?", expectedLang: "en" },
-    { q: "వైజాగ్ ఆఫీస్ ఫోన్ నెంబర్ మరియు అడ్రస్ చెప్పండి", expectedLang: "te" },
+    { q: "How can I contact GK Nexergy?", expectedLang: "en" },
+    { q: "ఆఫీస్ ఫోన్ నెంబర్ మరియు అడ్రస్ చెప్పండి", expectedLang: "te" },
     { q: "meeru em courses offer chestaru?", expectedLang: "te" },
   ];
 

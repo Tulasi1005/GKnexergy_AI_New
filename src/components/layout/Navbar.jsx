@@ -81,15 +81,18 @@ const Navbar = ({ theme, onToggleTheme }) => {
             className="fixed top-0 inset-x-0 w-full z-50 backdrop-blur-2xl transition-all duration-300"
             data-testid="main-navbar"
             style={{
-                border: "none",
                 background:
                     theme === "dark"
-                        ? "linear-gradient(180deg, rgba(12, 30, 61, 0.96) 0%, rgba(9, 23, 48, 0.98) 100%)"
-                        : "linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.94) 100%)",
+                        ? "linear-gradient(180deg, rgba(10, 25, 47, 0.97) 0%, rgba(7, 18, 36, 0.98) 100%)"
+                        : "#ffffff",
+                borderBottom:
+                    theme === "dark"
+                        ? "1px solid rgba(56, 189, 248, 0.18)"
+                        : "1px solid rgba(226, 232, 240, 0.9)",
                 boxShadow:
                     theme === "dark"
-                        ? "0 4px 25px rgba(0, 0, 0, 0.45), 0 0 20px 0 rgba(2, 132, 199, 0.12)"
-                        : "0 4px 20px -2px rgba(15, 45, 107, 0.07), 0 2px 6px -1px rgba(0, 0, 0, 0.04)",
+                        ? "0 4px 25px rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(37, 99, 235, 0.15)"
+                        : "0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03)",
             }}
         >
             <div className="mx-auto max-w-7xl px-2.5 xs:px-4 sm:px-6 lg:px-8">
@@ -113,14 +116,6 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                 }}
                             />
                         </Link>
-
-                        {/* Subtle Desktop Status Tag */}
-                        <div className="hidden xl:flex items-center gap-2 pl-3">
-                            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[11px] font-bold tracking-wider uppercase text-slate-500 dark:text-slate-400">
-                                Enterprise &bull; Academy
-                            </span>
-                        </div>
                     </div>
 
                     {/* RIGHT – Actions Island */}
@@ -171,10 +166,13 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                         transition={{ duration: 0.18, ease: "easeOut" }}
-                                        className="fixed xs:absolute right-2.5 xs:right-0 top-16 xs:top-full mt-2 z-[9999] rounded-2xl border p-3.5 xs:p-4 shadow-2xl"
+                                        className="absolute right-0 top-full mt-2 z-[9999] rounded-2xl border p-3.5 sm:p-4 shadow-2xl"
                                         style={{
-                                            width: "min(320px, calc(100vw - 20px))",
-                                            maxWidth: "calc(100vw - 20px)",
+                                            position: "absolute",
+                                            top: "calc(100% + 8px)",
+                                            right: 0,
+                                            width: "min(320px, calc(100vw - 24px))",
+                                            maxWidth: "calc(100vw - 24px)",
                                             backgroundColor: theme === "dark" ? "#0c1e3d" : "#ffffff",
                                             borderColor: theme === "dark" ? "rgba(56, 189, 248, 0.3)" : "#e2e8f0",
                                             boxShadow:
@@ -182,11 +180,12 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                                     ? "0 25px 60px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.2)"
                                                     : "0 20px 45px -10px rgba(15, 23, 42, 0.18), 0 4px 16px rgba(0, 0, 0, 0.06)",
                                             backdropFilter: "blur(20px)",
+                                            zIndex: 9999,
                                         }}
                                     >
                                         {/* Upward Triangle Arrow */}
                                         <div
-                                            className="hidden xs:block absolute -top-2 right-6 h-3.5 w-3.5 rotate-45 border-l border-t pointer-events-none"
+                                            className="block absolute -top-2 right-6 h-3.5 w-3.5 rotate-45 border-l border-t pointer-events-none"
                                             style={{
                                                 backgroundColor: theme === "dark" ? "#0c1e3d" : "#ffffff",
                                                 borderColor: theme === "dark" ? "rgba(56, 189, 248, 0.3)" : "#e2e8f0",
@@ -345,7 +344,25 @@ const Navbar = ({ theme, onToggleTheme }) => {
                             )}
                         </button>
 
-                        {/* 3. STACK OF CARDS QUICK NAV */}
+                        {/* 3. PRICING QUICK NAV */}
+                        <Link
+                            to="/pricing"
+                            data-testid="nav-pricing-btn"
+                            className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-full font-display text-xs font-bold transition-all hover:scale-105"
+                            style={{
+                                backgroundColor:
+                                    theme === "dark"
+                                        ? "rgba(14, 30, 60, 0.85)"
+                                        : "rgba(241, 245, 249, 0.95)",
+                                color: theme === "dark" ? "#93c5fd" : "#2563eb",
+                                border: theme === "dark" ? "1px solid rgba(56, 189, 248, 0.2)" : "1px solid rgba(37, 99, 235, 0.15)",
+                            }}
+                        >
+                            <Sparkles className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400" />
+                            <span>Pricing Plans</span>
+                        </Link>
+
+                        {/* 4. STACK OF CARDS QUICK NAV */}
                         <Link
                             to="/home#pages-stack-section"
                             data-testid="nav-stack-btn"
@@ -433,8 +450,8 @@ const Navbar = ({ theme, onToggleTheme }) => {
                             style={{
                                 background:
                                     theme === "dark"
-                                        ? "linear-gradient(180deg, rgba(12, 30, 61, 0.98) 0%, rgba(9, 23, 48, 0.99) 100%)"
-                                        : "linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 250, 252, 0.98) 100%)",
+                                        ? "linear-gradient(180deg, rgba(10, 25, 47, 0.98) 0%, rgba(7, 18, 36, 0.99) 100%)"
+                                        : "#ffffff",
                                 borderColor:
                                     theme === "dark"
                                         ? "rgba(56, 189, 248, 0.25)"
@@ -442,7 +459,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                 boxShadow:
                                     theme === "dark"
                                         ? "0 30px 70px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(56, 189, 248, 0.15)"
-                                        : "0 25px 50px -12px rgba(15, 23, 42, 0.15)",
+                                        : "0 25px 50px -12px rgba(15, 23, 42, 0.15), 0 4px 16px rgba(0, 0, 0, 0.05)",
                             }}
                         >
                             
@@ -460,8 +477,9 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                     <div className="flex flex-col space-y-1">
                                         {[
                                             { label: "Home", to: "/home", desc: "Main Ecosystem Overview" },
+                                            { label: "Pricing Plans", to: "/pricing", desc: "Starter, Growth & Premium Pods" },
                                             { label: "Stack of Cards", to: "/home#pages-stack-section", desc: "Interactive Ecosystem Deck" },
-                                            { label: "Company & Vision", to: "/about", desc: "Our Story & Visakhapatnam Hub" },
+                                            { label: "Company & Vision", to: "/about", desc: "Our Story & Global Mission" },
                                             { label: "Why GK Nexergy", to: "/why-gk-nexergy", desc: "Pod Delivery & 100% IP Ownership" },
                                         ].map((item) => (
                                             <Link
@@ -526,7 +544,7 @@ const Navbar = ({ theme, onToggleTheme }) => {
                                             { label: "Academy Overview", to: "/academy", desc: "Industry Readiness & Mentorship" },
                                             { label: "Cyber Security & Hacking", to: "/academy/cyber-security", desc: "16-Week Intensive Defense Labs" },
                                             { label: "Delivered Projects", to: "/projects", desc: "Real Client Case Studies & ROI" },
-                                            { label: "Careers & Hiring", to: "/careers", desc: "Join Visakhapatnam Agile Pods" },
+                                            { label: "Careers & Hiring", to: "/careers", desc: "Join Autonomous Agile Pods" },
                                         ].map((item) => (
                                             <Link
                                                 key={item.to}

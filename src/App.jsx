@@ -18,6 +18,7 @@ import CourseDetail from "@/pages/CourseDetail";
 import Projects from "@/pages/Projects";
 import Careers from "@/pages/Careers";
 import Contact from "@/pages/Contact";
+import Pricing from "@/pages/Pricing";
 
 import Landing from "@/pages/Landing";
 
@@ -80,6 +81,7 @@ const Shell = ({ theme, onToggleTheme }) => {
                     <Route path="/academy/:slug" element={<CourseDetail />} />
                     <Route path="/projects" element={<Projects />} />
                     <Route path="/careers" element={<Careers />} />
+                    <Route path="/pricing" element={<Pricing />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="*" element={<Home />} />
                 </Routes>

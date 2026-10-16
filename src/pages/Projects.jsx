@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, Layers } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import SEO from "../components/SEO";
 import './Projects.css';
 
@@ -632,26 +632,25 @@ export default function Projects() {
               <Link
                 to="/home#pages-stack-section"
                 data-testid="back-to-stack-link"
+                aria-label="Back"
+                title="Back"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '4px 12px',
-                  borderRadius: '9999px',
+                  justifyContent: 'center',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
                   backgroundColor: 'rgba(59, 130, 246, 0.12)',
                   border: '1px solid rgba(59, 130, 246, 0.3)',
                   color: '#60a5fa',
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
                   textDecoration: 'none',
                   marginBottom: '14px',
                   transition: 'all 0.2s ease',
-                  width: 'fit-content'
                 }}
+                className="hover:scale-105"
               >
-                <ChevronLeft style={{ width: 14, height: 14 }} />
-                <Layers style={{ width: 14, height: 14 }} />
-                <span>Back to Home Stack of Cards</span>
+                <ChevronLeft style={{ width: 18, height: 18 }} />
               </Link>
               <h1 className="spotlight-title">Our Projects</h1>
               <p className="spotlight-desc">

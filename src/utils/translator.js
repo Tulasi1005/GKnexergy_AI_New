@@ -54,7 +54,7 @@ export const setGlobalPageLanguage = (langCode) => {
 export const DEMO_PHRASES = [
   "GK Nexergy brings technology, learning and enterprise solutions together through one connected ecosystem.",
   "Train. Build. Transform. Empowering talent and businesses for the digital future.",
-  "Custom software engineering, cloud platforms, predictive AI automation, and academy programs in Visakhapatnam."
+  "Custom software engineering, cloud platforms, predictive AI automation, and academy programs for global enterprises."
 ];
 
 export const DEMO_TRANSLATIONS = {
@@ -63,7 +63,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "జికె నెక్సర్గీ సాంకేతికత, అభ్యాసం మరియు ఎంటర్‌ప్రైజ్ పరిష్కారాలను ఒక అనుసంధానిత పర్యావరణ వ్యవస్థ ద్వారా అందిస్తుంది.",
       "శిక్షణ. నిర్మాణం. పరివర్తన. డిజిటల్ భవిష్యత్తు కోసం ప్రతిభను మరియు వ్యాపారాలను శక్తివంతం చేయడం.",
-      "విశాఖపట్నంలో కస్టమ్ సాఫ్ట్‌వేర్ ఇంజనీరింగ్, క్లౌడ్ ప్లాట్‌ఫారమ్‌లు, ప్రిడిక్టివ్ AI ఆటోమేషన్ మరియు అకాడమీ ప్రోగ్రామ్‌లు."
+      "గ్లోబల్ ఎంటర్‌ప్రైజెస్ కోసం కస్టమ్ సాఫ్ట్‌వేర్ ఇంజనీరింగ్, క్లౌడ్ ప్లాట్‌ఫారమ్‌లు, ప్రిడిక్టివ్ AI ఆటోమేషన్ మరియు అకాడమీ ప్రోగ్రామ్‌లు."
     ]
   },
   hi: {
@@ -71,7 +71,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "जीके नेक्सर्जी एक जुड़े हुए इकोसिस्टम के माध्यम से तकनीक, सीखने और उद्यम समाधानों को एक साथ लाता है।",
       "प्रशिक्षण। निर्माण। परिवर्तन। डिजिटल भविष्य के लिए प्रतिभा और व्यवसायों को सशक्त बनाना।",
-      "विशाखापत्तनम में कस्टम सॉफ्टवेयर इंजीनियरिंग, क्लाउड प्लेटफॉर्म, प्रेडिक्टिव एआई ऑटोमेशन और अकादमी कार्यक्रम।"
+      "वैश्विक उद्यमों के लिए कस्टम सॉफ्टवेयर इंजीनियरिंग, क्लाउड प्लेटफॉर्म, प्रेडिक्टिव एआई ऑटोमेशन और अकादमी कार्यक्रम।"
     ]
   },
   ta: {
@@ -79,7 +79,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "ஜிகே நெக்ஸர்ஜி தொழில்நுட்பம், கற்றல் மற்றும் நிறுவன தீர்வுகளை ஒரு இணைக்கப்பட்ட சுற்றுச்சூழல் மூலம் ஒன்றாகக் கொண்டுவருகிறது.",
       "பயிற்சி. உருவாக்கம். மாற்றம். டிஜிட்டல் எதிர்காலத்திற்காக திறமைகளையும் வணிகங்களையும் மேம்படுத்துதல்.",
-      "விசாகப்பட்டினத்தில் தனிப்பயன் மென்பொருள் பொறியியல், கிளவுட் தளங்கள், முன்கணிப்பு AI மற்றும் அகாடமி திட்டங்கள்."
+      "உலகளாவிய நிறுவனங்களுக்கான தனிப்பயன் மென்பொருள் பொறியியல், கிளவுட் தளங்கள், முன்கணிப்பு AI மற்றும் அகாடமி திட்டங்கள்."
     ]
   },
   kn: {
@@ -87,7 +87,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "ಜಿಕೆ ನೆಕ್ಸರ್ಜಿ ತಂತ್ರಜ್ಞಾನ, ಕಲಿಕೆ ಮತ್ತು ಎಂಟರ್‌ಪ್ರೈಸ್ ಪರಿಹಾರಗಳನ್ನು ಒಂದು ಸಂಯೋಜಿತ ಪರಿಸರ ವ್ಯವಸ್ಥೆಯ ಮೂಲಕ ಒಟ್ಟಿಗೆ ತರುತ್ತದೆ.",
       "ತರಬೇತಿ. ನಿರ್ಮಾಣ. ರೂಪಾಂತರ. ಡಿಜಿಟಲ್ ಭವಿಷ್ಯಕ್ಕಾಗಿ ಪ್ರತಿಭೆ ಮತ್ತು ವ್ಯವಹಾರಗಳನ್ನು ಸಶಕ್ತಗೊಳಿಸುವುದು.",
-      "ವಿಶಾಖಪಟ್ಟಣದಲ್ಲಿ ಕಸ್ಟಮ್ ಸಾಫ್ಟ್‌ವೇರ್ ಎಂಜಿನಿಯರಿಂಗ್, ಕ್ಲೌಡ್ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ಗಳು, ಮುನ್ಸೂಚಕ AI ಮತ್ತು ಅಕಾಡೆಮಿ ಕಾರ್ಯಕ್ರಮಗಳು."
+      "ಜಾಗತಿಕ ಉದ್ಯಮಗಳಿಗಾಗಿ ಕಸ್ಟಮ್ ಸಾಫ್ಟ್‌ವೇರ್ ಎಂಜಿನಿಯರಿಂಗ್, ಕ್ಲೌಡ್ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ಗಳು, ಮುನ್ಸೂಚಕ AI ಮತ್ತು ಅಕಾಡೆಮಿ ಕಾರ್ಯಕ್ರಮಗಳು."
     ]
   },
   mr: {
@@ -95,7 +95,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "जीके नेक्सर्जी तंत्रज्ञान, शिक्षण आणि एंटरप्राइझ सोल्यूशन्स एका कनेक्ट केलेल्या इकोसिस्टमद्वारे एकत्र आणते.",
       "प्रशिक्षण. निर्मिती. परिवर्तन. डिजिटल भविष्यासाठी प्रतिभा आणि व्यवसायांना सक्षम करणे.",
-      "विशाखापट्टणममध्ये कस्टम सॉफ्टवेअर अभियांत्रिकी, क्लाउड प्लॅटफॉर्म, प्रेडिक्टिव्ह AI आणि अकादमी कार्यक्रम."
+      "ग्लोबल एंटरप्रायझेससाठी कस्टम सॉफ्टवेअर अभियांत्रिकी, क्लाउड प्लॅटफॉर्म, प्रेडिक्टिव्ह AI आणि अकादमी कार्यक्रम."
     ]
   },
   bn: {
@@ -103,7 +103,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "জিকে নেক্সার্গি একটি সংযুক্ত ইকোসিস্টেমের মাধ্যমে প্রযুক্তি, শিক্ষা এবং এন্টারপ্রাইজ সমাধানগুলিকে একত্রিত করে।",
       "প্রশিক্ষণ। নির্মাণ। রূপান্তর। ডিজিটাল ভবিষ্যতের জন্য প্রতিভা এবং ব্যবসায়িক প্রতিষ্ঠানগুলিকে ক্ষমতায়ন।",
-      "বিশাখাপত্তনমে কাস্টম সফটওয়্যার ইঞ্জিনিয়ারিং, ক্লাউড প্ল্যাটফর্ম, প্রেডিক্টিভ এআই এবং একাডেমি প্রোগ্রাম।"
+      "গ্লোবাল এন্টারপ্রাইজগুলির জন্য কাস্টম সফটওয়্যার ইঞ্জিনিয়ারিং, ক্লাউড প্ল্যাটফর্ম, প্রেডিক্টিভ এআই এবং একাডেমি প্রোগ্রাম।"
     ]
   },
   es: {
@@ -111,7 +111,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "GK Nexergy une la tecnología, el aprendizaje y las soluciones empresariales a través de un ecosistema conectado.",
       "Entrenar. Construir. Transformar. Empoderando el talento y las empresas para el futuro digital.",
-      "Ingeniería de software a medida, plataformas en la nube, automatización con IA y programas de academia en Visakhapatnam."
+      "Ingeniería de software a medida, plataformas en la nube, automatización con IA y programas de academia para empresas globales."
     ]
   },
   fr: {
@@ -119,7 +119,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "GK Nexergy rassemble la technologie, la formation et les solutions d'entreprise au sein d'un écosystème connecté.",
       "Former. Construire. Transformer. Donner aux talents et aux entreprises les moyens de réussir dans l'ère numérique.",
-      "Ingénierie logicielle sur mesure, plates-formes cloud, automatisation par IA et programmes d'académie à Visakhapatnam."
+      "Ingénierie logicielle sur mesure, plates-formes cloud, automatisation par IA et programmes d'académie pour les entreprises mondiales."
     ]
   },
   de: {
@@ -127,7 +127,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "GK Nexergy verbindet Technologie, Bildung und Unternehmenslösungen in einem vernetzten Ökosystem.",
       "Trainieren. Bauen. Transformieren. Stärkung von Talenten und Unternehmen für die digitale Zukunft.",
-      "Individuelle Softwareentwicklung, Cloud-Plattformen, vorausschauende KI-Automatisierung und Akademieprogramme in Visakhapatnam."
+      "Individuelle Softwareentwicklung, Cloud-Plattformen, vorausschauende KI-Automatisierung und Akademieprogramme für globale Unternehmen."
     ]
   },
   ja: {
@@ -135,7 +135,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "GK Nexergyは、コネクテッド・エコシステムを通じてテクノロジー、学習、エンタープライズ・ソリューションを統合します。",
       "育成。構築。変革。デジタルの未来に向けて人材と企業を支援します。",
-      "ヴィシャカパトナムにおけるカスタムソフトウェア開発、クラウドプラットフォーム、AI自動化、アカデミープログラム。"
+      "グローバル企業向けのカスタムソフトウェア開発、クラウドプラットフォーム、AI自動化、アカデミープログラム。"
     ]
   },
   ar: {
@@ -143,7 +143,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "تجمع جي كي نيكسرجي بين التكنولوجيا والتعليم والحلول المؤسسية من خلال منظومة متكاملة واحدة.",
       "تدريب. بناء. تحول. تمكين الكفاءات والشركات من أجل المستقبل الرقمي.",
-      "هندسة برمجيات مخصصة، منصات سحابية، أتمتة الذكاء الاصطناعي وبرامج الأكاديمية في فيساخاباتنام."
+      "هندسة برمجيات مخصصة، منصات سحابية، أتمتة الذكاء الاصطناعي وبرامج الأكاديمية للمؤسسات العالمية."
     ]
   },
   "zh-CN": {
@@ -151,7 +151,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "GK Nexergy 通过一个互联的生态系统将技术、学习和企业解决方案汇集在一起。",
       "培训。构建。转型。赋能人才与企业迈向数字化未来。",
-      "位于维沙卡帕特南的定制软件工程、云平台、预测性 AI 自动化和学院培训计划。"
+      "为全球企业量身定制的软件工程、云平台、预测性 AI 自动化和学院培训计划。"
     ]
   },
   en: {
@@ -159,7 +159,7 @@ export const DEMO_TRANSLATIONS = {
     translations: [
       "GK Nexergy brings technology, learning and enterprise solutions together through one connected ecosystem.",
       "Train. Build. Transform. Empowering talent and businesses for the digital future.",
-      "Custom software engineering, cloud platforms, predictive AI automation, and academy programs in Visakhapatnam."
+      "Custom software engineering, cloud platforms, predictive AI automation, and academy programs for global enterprises."
     ]
   }
 };
